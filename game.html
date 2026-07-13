@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>🦈 SHARK DODGE!!! 🏊 — Cape Cod Homepage</title>
+<style>
+  :root{ --sun:#FFD700; --sea:#008080; --btnface:#C0C0C0; --hotpink:#FF1493; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    background: #0a1a3f;
+    font-family: 'Courier New', monospace;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden;
+  }
+  /* Cheesy marquee to match the homepage */
+  .marquee{height:30px;background:var(--sun);overflow:hidden;white-space:nowrap;display:flex;align-items:center;border-bottom:2px solid #000}
+  .marquee span{display:inline-block;font-weight:bold;color:#000;padding-left:100%;animation:scrollx 16s linear infinite;font-family:Verdana,sans-serif;font-size:14px}
+  @keyframes scrollx{to{transform:translateX(-100%)}}
+  /* Back-to-home bar */
+  .topbar{background:var(--sea);border-bottom:2px solid #000;padding:6px;display:flex;justify-content:center}
+  .btn95{background:var(--btnface);border:3px outset #fff;color:#000;font:bold 15px Verdana,sans-serif;min-height:40px;padding:8px 16px;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer}
+  .btn95:active{border-style:inset;transform:translate(1px,1px)}
+  #wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - 74px);
+    gap: 6px;
+    padding: 6px;
+  }
+  h1 { color: #ffe600; font-size: 20px; letter-spacing: 2px; text-shadow: 2px 2px #d40000; }
+  #game {
+    background: #1560bd; border: 4px solid #ffe600; image-rendering: pixelated;
+    touch-action: none; max-width: 100%; max-height: 62vh;
+  }
+  #controls { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    background: #ffe600; color: #d40000; border: 3px solid #d40000;
+    font-family: 'Courier New', monospace; font-weight: bold; font-size: 18px;
+    padding: 10px 16px; border-radius: 6px; touch-action: none;
+  }
+  .btn:active { background: #d40000; color: #ffe600; }
+  #fire { font-size: 16px; }
+  #hint { color: #9fd3ff; font-size: 11px; text-align: center; }
+  @media (prefers-reduced-motion: reduce){.marquee span{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="marquee" aria-hidden="true"><span>🦈 SHARK DODGE!!! 🏊 DODGE THE SHARKS OR HARPOON 'EM 💥 GRAB HARPOON AMMO 🎯 HOW LONG CAN YOU LAST?? 🌊 &nbsp;&nbsp;&nbsp; 🦈 SHARK DODGE!!! 🏊</span></div>
+<div class="topbar"><a class="btn95" href="index.html">🏠 « Back to the Homepage</a></div>
+
+<div id="wrap">
+  <h1>&#128694; SHARK DODGE! &#129416;</h1>
+  <canvas id="game" width="320" height="420"></canvas>
+  <div id="controls">
+    <button class="btn" id="left">&#9664;</button>
+    <button class="btn" id="fire">FIRE &#128481;</button>
+    <button class="btn" id="right">&#9654;</button>
+    <button class="btn" id="mute">&#128266;</button>
+  </div>
+  <div id="hint">Thumb drag to swim &middot; tap FIRE for harpoons &middot; grab ammo</div>
+</div>
+
+<script>
+const cv = document.getElementById('game');
+const ctx = cv.getContext('2d');
+const W = cv.width, H = cv.height;
+ctx.imageSmoothingEnabled = false;
+
+let state = 'ready';
+let score = 0, best = 0;
+let t = 0;
+
+const swimmer = { x: W/2, y: H - 60, w: 18, h: 18, tx: W/2 };
+let sharks = [], harpoons = [], ammoDrops = [], booms = [];
+let ammo = 5;
+let spawnTimer = 0, ammoTimer = 0, speed = 1.6;
+let moveDir = 0; // -1 left, +1 right (button/keys)
+
+// ---------- audio (synth "MIDI" chiptune) ----------
+let AC = null, master = null, musicOn = true;
+function initAudio() {
+  if (AC) { if (AC.state === 'suspended') AC.resume(); return; }
+  AC = new (window.AudioContext || window.webkitAudioContext)();
+  master = AC.createGain();
+  master.gain.value = 0.35;
+  master.connect(AC.destination);
+  startMusic();
+}
+function tone(freq, dur, type, t0, vol, dest) {
+  if (!AC) return;
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = type || 'square';
+  o.frequency.setValueAtTime(freq, t0);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(vol || 0.2, t0 + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(dest || master);
+  o.start(t0); o.stop(t0 + dur + 0.02);
+  return o;
+}
+function sfxShoot() {
+  if (!AC) return; const t0 = AC.currentTime;
+  const o = tone(880, 0.18, 'square', t0, 0.25);
+  if (o) o.frequency.exponentialRampToValueAtTime(1600, t0 + 0.14); // rising "thwip"
+}
+function sfxBoom() {
+  if (!AC) return; const t0 = AC.currentTime;
+  // noise burst
+  const buf = AC.createBuffer(1, AC.sampleRate * 0.3, AC.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i=0;i<d.length;i++) d[i] = (Math.random()*2-1) * (1 - i/d.length);
+  const n = AC.createBufferSource(); n.buffer = buf;
+  const g = AC.createGain(); g.gain.value = 0.4;
+  const f = AC.createBiquadFilter(); f.type='lowpass'; f.frequency.value = 900;
+  n.connect(f); f.connect(g); g.connect(master); n.start(t0);
+  const o = tone(160, 0.28, 'sawtooth', t0, 0.3);
+  if (o) o.frequency.exponentialRampToValueAtTime(50, t0 + 0.26);
+}
+function sfxPickup() {
+  if (!AC) return; const t0 = AC.currentTime;
+  tone(660, 0.09, 'square', t0, 0.22);
+  tone(880, 0.09, 'square', t0 + 0.09, 0.22);
+  tone(1320, 0.12, 'square', t0 + 0.18, 0.22); // happy up-arpeggio
+}
+function sfxLose() {
+  if (!AC) return; const t0 = AC.currentTime;
+  const o = tone(700, 0.9, 'sawtooth', t0, 0.3);
+  if (o) o.frequency.exponentialRampToValueAtTime(70, t0 + 0.88); // spiral down
+  // wobble on the way down
+  const lfo = AC.createOscillator(), lg = AC.createGain();
+  lfo.frequency.value = 14; lg.gain.value = 40;
+  lfo.connect(lg);
+  if (o) lg.connect(o.frequency);
+  lfo.start(t0); lfo.stop(t0 + 0.9);
+}
+
+// cheesy Jaws-style ostinato + melody
+let musicTimer = null, mBeat = 0, mNext = 0;
+const BASS = [41.20, 41.20, 43.65, 43.65]; // E1-ish -> F1-ish two-note dread
+const MEL  = [0,0,0,0, 329.63,392.00,329.63,261.63]; // cheesy little riff every 2 bars
+function startMusic() {
+  if (musicTimer) return;
+  mBeat = 0; mNext = AC.currentTime + 0.1;
+  musicTimer = setInterval(() => {
+    if (!AC || !musicOn) return;
+    while (mNext < AC.currentTime + 0.2) {
+      const tempo = Math.max(0.14, 0.34 - Math.min(score, 60) * 0.003); // speeds up as danger grows
+      if (state === 'play') {
+        const b = BASS[mBeat % BASS.length];
+        tone(b, tempo * 0.9, 'triangle', mNext, 0.5);
+        tone(b * 2, tempo * 0.5, 'square', mNext, 0.06);
+        const m = MEL[mBeat % MEL.length];
+        if (m) tone(m, tempo * 0.8, 'square', mNext + tempo*0.1, 0.12);
+        mBeat++;
+      }
+      mNext += tempo;
+    }
+  }, 60);
+}
+function stopMusic() { if (musicTimer) { clearInterval(musicTimer); musicTimer = null; } }
+
+function reset() {
+  score = 0; t = 0; speed = 1.6; ammo = 5;
+  sharks = []; harpoons = []; ammoDrops = []; booms = [];
+  spawnTimer = 0; ammoTimer = 180;
+  swimmer.x = W/2; swimmer.tx = W/2;
+  state = 'play';
+}
+
+function spawnShark() {
+  const size = 26 + Math.random()*10;
+  const dir = Math.random() < 0.5 ? 1 : -1;
+  sharks.push({
+    x: Math.random() * (W - size), y: -size,
+    w: size, h: size*0.55,
+    vy: speed + Math.random()*1.1,
+    vx: dir * (0.4 + Math.random()*0.9),
+    dir
+  });
+}
+function spawnAmmo() {
+  ammoDrops.push({ x: 20 + Math.random()*(W-40), y: -14, w: 14, h: 14, vy: 1.4 });
+}
+function fire() {
+  if (state !== 'play' || ammo <= 0) return;
+  ammo--;
+  harpoons.push({ x: swimmer.x + swimmer.w/2 - 2, y: swimmer.y, w: 4, h: 12, vy: -6 });
+  sfxShoot();
+}
+
+// ---------- pixel drawing ----------
+function px(x, y, w, h, c) { ctx.fillStyle = c; ctx.fillRect(x|0, y|0, w, h); }
+
+function drawSwimmer(s) {
+  const x = s.x, y = s.y;
+  px(x, y, s.w, s.h, '#ffcf9e');
+  px(x+3, y+3, 3, 3, '#000');
+  px(x+11, y+3, 3, 3, '#000');
+  px(x, y+s.h, s.w, 6, '#d40000');
+  const swing = Math.sin(t*0.3) * 4;
+  px(x-5, y+5+swing, 5, 4, '#ffcf9e');
+  px(x+s.w, y+5-swing, 5, 4, '#ffcf9e');
+  // little harpoon gun in hand
+  px(x+s.w+1, y+2, 7, 3, '#3a3a3a');
+}
+
+function drawShark(k) {
+  const x = k.x, y = k.y, w = k.w, h = k.h;
+  const bodyGray = '#6b7a89', dark = '#4a5765', belly = '#c9d4dc';
+  const flip = k.dir < 0; // facing left
+  ctx.save();
+  if (flip) { ctx.translate(x + w, y); ctx.scale(-1, 1); ctx.translate(-x, -y); }
+  // tail (left side)
+  px(x, y+h*0.15, w*0.16, h*0.7, bodyGray);
+  px(x, y-h*0.15, w*0.10, h*0.4, dark);
+  px(x, y+h*0.6, w*0.10, h*0.5, dark);
+  // main body
+  px(x+w*0.14, y+h*0.2, w*0.7, h*0.6, bodyGray);
+  // belly
+  px(x+w*0.2, y+h*0.6, w*0.6, h*0.28, belly);
+  // pointed snout (right)
+  px(x+w*0.8, y+h*0.32, w*0.2, h*0.4, bodyGray);
+  // dorsal fin (top)
+  px(x+w*0.4, y-h*0.35, w*0.22, h*0.5, dark);
+  // pectoral fin (bottom)
+  px(x+w*0.45, y+h*0.8, w*0.2, h*0.4, dark);
+  // gills
+  px(x+w*0.6, y+h*0.3, 2, h*0.4, dark);
+  px(x+w*0.66, y+h*0.3, 2, h*0.4, dark);
+  // eye
+  px(x+w*0.78, y+h*0.35, 3, 3, '#000');
+  // teeth (mouth on snout)
+  for (let i=0;i<3;i++) px(x+w*0.82+i*4, y+h*0.62, 2, 3, '#fff');
+  ctx.restore();
+}
+
+function drawHarpoon(hp) {
+  px(hp.x, hp.y, hp.w, hp.h, '#e8e8e8');
+  px(hp.x-2, hp.y, hp.w+4, 3, '#9a9a9a'); // barb
+  px(hp.x+1, hp.y+hp.h, 2, 4, '#8a5a2a'); // shaft tail
+}
+
+function drawAmmo(a) {
+  px(a.x, a.y, a.w, a.h, '#2a2a2a');
+  px(a.x+a.w/2-1, a.y-4, 3, 6, '#e8e8e8'); // harpoon tip poking up
+  px(a.x+2, a.y+3, a.w-4, 3, '#ffe600'); // yellow band
+}
+
+function drawBoom(b) {
+  const c = b.life > 8 ? '#fff' : (b.life > 4 ? '#ffe600' : '#d40000');
+  const r = (14 - b.life);
+  px(b.x - r, b.y - 2, r*2, 4, c);
+  px(b.x - 2, b.y - r, 4, r*2, c);
+  px(b.x - r*0.7, b.y - r*0.7, r, r, c);
+}
+
+function rectHit(a, b) {
+  return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+}
+function circleHit(s, k) {
+  const sx = s.x + s.w/2, sy = s.y + s.h/2;
+  const kx = k.x + k.w/2, ky = k.y + k.h/2;
+  const dx = sx-kx, dy = sy-ky;
+  const r = (s.w/2 + k.w/2) * 0.6;
+  return dx*dx + dy*dy < r*r;
+}
+
+function update() {
+  t++;
+  if (state !== 'play') return;
+
+  // movement: buttons/keys nudge target; drag sets it directly
+  if (moveDir) swimmer.tx += moveDir * 6;
+  swimmer.tx = Math.max(0, Math.min(W - swimmer.w, swimmer.tx));
+  swimmer.x += (swimmer.tx - swimmer.x) * 0.3;
+  swimmer.x = Math.max(0, Math.min(W - swimmer.w, swimmer.x));
+
+  spawnTimer--;
+  if (spawnTimer <= 0) { spawnShark(); spawnTimer = Math.max(20, 55 - score*0.25); }
+  ammoTimer--;
+  if (ammoTimer <= 0) { spawnAmmo(); ammoTimer = 300 + Math.random()*240; }
+  speed += 0.0008;
+
+  for (const k of sharks) { k.y += k.vy; k.x += k.vx; if (k.x<0||k.x>W-k.w) { k.vx*=-1; k.dir*=-1; } }
+  for (const hp of harpoons) hp.y += hp.vy;
+  for (const a of ammoDrops) a.y += a.vy;
+  for (const b of booms) b.life--;
+
+  // harpoon vs shark
+  for (const hp of harpoons) {
+    for (const k of sharks) {
+      if (!k.dead && rectHit(hp, k)) {
+        k.dead = true; hp.dead = true;
+        booms.push({ x: k.x + k.w/2, y: k.y + k.h/2, life: 12 });
+        score += 3;
+        sfxBoom();
+      }
+    }
+  }
+
+  // ammo pickup
+  for (const a of ammoDrops) {
+    if (rectHit(a, swimmer)) { a.dead = true; ammo += 2; sfxPickup(); }
+  }
+
+  // shark passes bottom = survived, +1
+  for (const k of sharks) { if (!k.dead && k.y > H) { k.dead = true; score++; } }
+
+  // shark hits swimmer = game over
+  for (const k of sharks) {
+    if (!k.dead && circleHit(swimmer, k)) { state = 'dead'; best = Math.max(best, score); sfxLose(); }
+  }
+
+  sharks = sharks.filter(k => !k.dead);
+  harpoons = harpoons.filter(hp => !hp.dead && hp.y > -20);
+  ammoDrops = ammoDrops.filter(a => !a.dead && a.y < H + 20);
+  booms = booms.filter(b => b.life > 0);
+}
+
+function draw() {
+  ctx.fillStyle = '#1560bd';
+  ctx.fillRect(0,0,W,H);
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  for (let i=0;i<6;i++){ const yy = ((t*1.2 + i*80) % (H+40)) - 20; ctx.fillRect(0, yy, W, 3); }
+
+  for (const a of ammoDrops) drawAmmo(a);
+  for (const k of sharks) drawShark(k);
+  for (const hp of harpoons) drawHarpoon(hp);
+  for (const b of booms) drawBoom(b);
+  if (state !== 'dead') drawSwimmer(swimmer);
+
+  ctx.fillStyle = '#ffe600';
+  ctx.font = '16px "Courier New", monospace';
+  ctx.fillText('SCORE ' + score, 8, 20);
+  ctx.textAlign = 'right';
+  ctx.fillText('HARPOONS ' + ammo, W-8, 20);
+  ctx.textAlign = 'left';
+
+  if (state === 'ready' || state === 'dead') {
+    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+    ctx.fillRect(0, H/2-70, W, 140);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#ffe600';
+    ctx.font = '22px "Courier New", monospace';
+    if (state === 'ready') {
+      ctx.fillText('SHARK DODGE!', W/2, H/2-20);
+      ctx.font = '12px "Courier New", monospace';
+      ctx.fillStyle = '#fff';
+      ctx.fillText('DODGE OR HARPOON THE SHARKS', W/2, H/2+6);
+      ctx.fillText('TAP TO START', W/2, H/2+30);
+    } else {
+      ctx.fillStyle = '#d40000';
+      ctx.fillText('CHOMPED!', W/2, H/2-20);
+      ctx.fillStyle = '#fff';
+      ctx.font = '13px "Courier New", monospace';
+      ctx.fillText('SCORE ' + score + '   BEST ' + best, W/2, H/2+8);
+      ctx.fillText('TAP TO RETRY', W/2, H/2+30);
+    }
+    ctx.textAlign = 'left';
+  }
+}
+
+function loop() { update(); draw(); requestAnimationFrame(loop); }
+loop();
+
+// ---------- input ----------
+function moveTo(clientX) {
+  const rect = cv.getBoundingClientRect();
+  const scale = W / rect.width;
+  swimmer.tx = (clientX - rect.left) * scale - swimmer.w/2;
+}
+function startOrPlay() { initAudio(); if (state !== 'play') reset(); }
+
+cv.addEventListener('touchstart', e => { e.preventDefault(); startOrPlay(); moveTo(e.touches[0].clientX); }, {passive:false});
+cv.addEventListener('touchmove', e => { e.preventDefault(); moveTo(e.touches[0].clientX); }, {passive:false});
+cv.addEventListener('mousedown', e => { startOrPlay(); moveTo(e.clientX); });
+cv.addEventListener('mousemove', e => { if (e.buttons) moveTo(e.clientX); });
+
+// on-screen buttons (mobile + desktop)
+function holdBtn(id, dir) {
+  const el = document.getElementById(id);
+  const on = e => { e.preventDefault(); startOrPlay(); moveDir = dir; };
+  const off = e => { e.preventDefault(); if (moveDir === dir) moveDir = 0; };
+  el.addEventListener('touchstart', on, {passive:false});
+  el.addEventListener('touchend', off, {passive:false});
+  el.addEventListener('mousedown', on);
+  el.addEventListener('mouseup', off);
+  el.addEventListener('mouseleave', off);
+}
+holdBtn('left', -1);
+holdBtn('right', 1);
+const fireBtn = document.getElementById('fire');
+fireBtn.addEventListener('touchstart', e => { e.preventDefault(); startOrPlay(); fire(); }, {passive:false});
+fireBtn.addEventListener('mousedown', e => { e.preventDefault(); startOrPlay(); fire(); });
+
+// mute toggle
+const muteBtn = document.getElementById('mute');
+function toggleMute(e) {
+  if (e) e.preventDefault();
+  initAudio();
+  musicOn = !musicOn;
+  if (master) master.gain.value = musicOn ? 0.35 : 0;
+  muteBtn.innerHTML = musicOn ? '&#128266;' : '&#128263;';
+}
+muteBtn.addEventListener('touchstart', toggleMute, {passive:false});
+muteBtn.addEventListener('mousedown', toggleMute);
+
+// keyboard (desktop)
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') { startOrPlay(); moveDir = -1; }
+  if (e.key === 'ArrowRight') { startOrPlay(); moveDir = 1; }
+  if (e.key === ' ' || e.key === 'ArrowUp') { e.preventDefault(); startOrPlay(); fire(); }
+});
+document.addEventListener('keyup', e => {
+  if (e.key === 'ArrowLeft' && moveDir === -1) moveDir = 0;
+  if (e.key === 'ArrowRight' && moveDir === 1) moveDir = 0;
+});
+</script>
+</body>
+</html>
