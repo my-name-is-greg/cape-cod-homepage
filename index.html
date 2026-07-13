@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome to Our Cape Cod Homepage!!!</title>
+<style>
+:root{
+  --sand:#FFF8E1; --ink:#1A1A2E; --sea:#008080; --hotpink:#FF1493;
+  --lime:#32CD32; --sun:#FFD700; --purple:#8A2BE2; --red:#FF3B30;
+  --linkblue:#0000EE; --btnface:#C0C0C0;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:64px}
+body{
+  margin:0; color:var(--ink);
+  font:16px/1.6 Verdana,Geneva,Tahoma,sans-serif;
+  background-color:#B2E5E5;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Crect width='48' height='48' fill='%23B2E5E5'/%3E%3Cpath d='M12 6l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L6.2 10.2l4-.6z' fill='%23FFD700' opacity='.55'/%3E%3Cpath d='M34 34c0-4 3-7 6-7s6 3 6 7c0 2-3 4-6 4s-6-2-6-4z' fill='%23FFF8E1' opacity='.7'/%3E%3Cpath d='M36 30l3 7M40 28l0 9M44 30l-3 7' stroke='%23D2A76A' stroke-width='1' opacity='.6'/%3E%3C/svg%3E");
+  background-repeat:repeat;
+}
+.wrap{max-width:640px;margin:0 auto;padding:0 12px}
+h1,h2,h3{font-family:"Comic Sans MS","Comic Sans","Chalkboard SE",cursive;margin:0 0 8px}
+h1{font-size:clamp(28px,8vw,44px)}
+h2{font-size:clamp(22px,6vw,32px)}
+h3{font-size:19px;color:var(--sea)}
+section{margin-bottom:32px;scroll-margin-top:64px}
+.card{background:var(--sand);color:var(--ink);border:3px ridge var(--sea);box-shadow:4px 4px 0 rgba(0,0,0,.35);padding:16px;margin:0 0 16px}
+a{color:var(--linkblue);text-decoration:underline;padding:4px 0}
+.fine{font-size:14px;color:#444}
+ul,ol{margin:8px 0;padding-left:22px}
+li{margin:4px 0}
+
+/* Marquee */
+.marquee{height:36px;background:var(--sun);overflow:hidden;white-space:nowrap;border-bottom:2px solid #000;display:flex;align-items:center}
+.marquee span{display:inline-block;font-weight:bold;color:#000;padding-left:100%;animation:scrollx 18s linear infinite}
+@keyframes scrollx{to{transform:translateX(-100%)}}
+.marquee:active span,body.paused .marquee span{animation-play-state:paused}
+
+/* Hero */
+.hero{text-align:center;padding:24px 0}
+.hero .card{padding:24px 16px}
+.wordart{background:linear-gradient(90deg,#FF1493,#FFD700,#32CD32,#008080,#8A2BE2);-webkit-background-clip:text;background-clip:text;color:var(--hotpink);filter:drop-shadow(2px 2px 0 #000)}
+@supports (background-clip:text) or (-webkit-background-clip:text){.wordart{color:transparent}}
+.star{display:inline-block;animation:spin 4s linear infinite;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lcd{font-family:"Courier New",monospace;background:#000;color:#32CD32;letter-spacing:3px;padding:4px 8px;border:2px inset #808080;display:inline-block}
+.uc{margin:16px auto 0;max-width:340px;background:repeating-linear-gradient(45deg,#FFD700 0 10px,#000 10px 20px);padding:6px;border:2px solid #000}
+.uc-inner{background:#000;color:var(--sun);font-weight:bold;padding:6px;font-size:14px}
+.blink{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* Sticky nav */
+nav.jump{position:sticky;top:0;z-index:50;background:var(--sea);border-bottom:2px solid #000;padding:8px;display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+nav.jump::-webkit-scrollbar{display:none}
+nav.jump .btn95{flex:0 0 auto}
+.btn95{background:var(--btnface);border:3px outset #fff;color:#000;font:bold 16px Verdana,sans-serif;min-height:44px;min-width:44px;padding:10px 16px;border-radius:0;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;cursor:pointer}
+.btn95:active{border-style:inset;transform:translate(1px,1px)}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+
+/* Section headers */
+.h2box{border:3px ridge var(--sea);padding:8px 12px;margin:0 0 16px;background:var(--sand)}
+.h2box h2{margin:0}
+#planning .h2box{border:3px dashed var(--sea);background:var(--sand);animation:ants 1s linear infinite}
+#planning h2{color:var(--sea)}
+@keyframes ants{to{border-color:var(--sea) transparent}}
+#house .h2box{background:repeating-linear-gradient(90deg,#DEB887 0 8px,#D2A76A 8px 16px)}
+#house h2{color:#8B4513}
+#sights h2{color:var(--purple);text-shadow:2px 2px 0 var(--sun)}
+#rainy .h2box{background:var(--sea) repeating-linear-gradient(100deg,transparent 0 14px,rgba(255,255,255,.35) 14px 16px)}
+#rainy h2{color:#fff}
+#food h2{color:var(--red);text-shadow:1px 1px 0 #fff,3px 3px 0 var(--sun)}
+#bring h2{color:#006400}
+#bring .h2box{border:8px solid;border-image:repeating-conic-gradient(#000 0 25%,var(--sun) 0 50%) 8;border-image-outset:0}
+#crew h2{color:var(--hotpink)}
+
+/* Farts + Crap Beach */
+#farts .card{border:6px double var(--hotpink);animation:fartglow 1.2s ease-in-out infinite alternate}
+@keyframes fartglow{from{box-shadow:0 0 8px var(--hotpink)}to{box-shadow:0 0 24px 6px var(--lime)}}
+#farts h2{animation:shake .5s infinite}
+@keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(1px,-1px)}75%{transform:translate(-1px,1px)}}
+.crap{border:4px solid var(--red)!important;animation:crapglow 1.2s ease-in-out infinite alternate;position:relative;overflow:hidden}
+@keyframes crapglow{from{box-shadow:0 0 8px var(--red)}to{box-shadow:0 0 24px 6px #FF8C00}}
+.ribbon{position:absolute;top:14px;right:-38px;transform:rotate(-12deg);background:var(--red);color:#fff;font-weight:bold;font-size:13px;padding:4px 40px;pointer-events:none}
+.crapname{color:var(--red);animation:rainbowhue 3s linear infinite;display:inline-block}
+@keyframes rainbowhue{to{filter:hue-rotate(360deg)}}
+
+/* Checklist */
+.chk{display:flex;align-items:center;min-height:44px;gap:12px;font-size:16px;cursor:pointer}
+.chk input{appearance:none;-webkit-appearance:none;width:28px;height:28px;min-width:28px;border:3px inset #808080;background:#fff;margin:0;position:relative;cursor:pointer}
+.chk input:checked{background:var(--lime)}
+.chk input:checked::after{content:"✔";color:#000;font-weight:bold;position:absolute;left:5px;top:0;font-size:18px}
+.chk input:checked+span{text-decoration:line-through;opacity:.6}
+
+/* Guestbook / footer */
+.gb input[type=text],.gb textarea{font-size:16px;width:100%;min-height:44px;border:2px inset #808080;padding:8px;font-family:Verdana,sans-serif;margin:4px 0 12px}
+.webring{background:var(--purple);color:#fff;text-align:center;border:3px ridge var(--sun)}
+.webring a{color:var(--sun);padding:12px 6px;display:inline-block}
+footer{text-align:center;padding:16px 0 40px}
+.badge{display:inline-block;margin:6px}
+
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+body.paused *{animation-play-state:paused!important}
+</style>
+</head>
+<body id="top">
+
+<div class="marquee" aria-hidden="true"><span>🌊 WELCOME TO CAPE COD ☀️ 7 DAYS OF SUN, SAND &amp; SEAFOOD 🦀 DON'T FORGET SUNSCREEN 🧴 &nbsp;&nbsp;&nbsp; 🌊 WELCOME TO CAPE COD ☀️ 7 DAYS OF SUN, SAND &amp; SEAFOOD 🦀 DON'T FORGET SUNSCREEN 🧴</span></div>
+
+<div class="wrap">
+<header class="hero">
+  <div class="card">
+    <h1><span class="star" aria-hidden="true">⭐</span> <span class="wordart">🦞 Welcome to our Cape Cod Homepage!!! 🦞</span> <span class="star" aria-hidden="true">⭐</span></h1>
+    <p><b>Chatham, MA · July 25 – Aug 1 · The Short Family World Wide Web Site</b></p>
+    <p>You are visitor #<span class="lcd" id="counter">000423</span></p>
+    <div class="uc" aria-hidden="true"><div class="uc-inner">👷 <span class="blink">UNDER CONSTRUCTION</span> 👷</div></div>
+  </div>
+</header>
+</div>
+
+<nav class="jump" aria-label="Jump to section">
+  <a class="btn95" href="#planning">📋 Plan</a>
+  <a class="btn95" href="#house">🏠 House</a>
+  <a class="btn95" href="#beaches">🏖️ Beaches</a>
+  <a class="btn95" href="#sights">🗺️ Sights</a>
+  <a class="btn95" href="#rainy">☔ Rainy</a>
+  <a class="btn95" href="#food">🍔 Food</a>
+  <a class="btn95" href="#farts">💨 FARTS</a>
+  <a class="btn95" href="#bring">🎒 Bring</a>
+  <a class="btn95" href="#crew">👨‍👩‍👧 Crew</a>
+  <button class="btn95" id="chill" type="button">⏸ Chill the page</button>
+  <button class="btn95" id="midi" type="button">🎵 midi_beachboys.mid ▶</button>
+</nav>
+
+<main class="wrap">
+
+<section id="planning">
+  <div class="h2box"><h2>📋 Planning</h2></div>
+  <div class="card">
+    <ul>
+      <li><b>Arrive July 25</b></li>
+      <li>Grocery shop before getting into the place</li>
+    </ul>
+  </div>
+  <div class="card place">
+    <h3>Stop &amp; Shop (Harwich)</h3>
+    <p>the big shop. 111 Brewster-Chatham Rd, Harwich (Rte 137), ~10 min. Open ~6am–11pm.</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=111%20Brewster-Chatham%20Rd%2C%20Harwich%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+      <a class="btn95" href="tel:+15084325000">📞 (508) 432-5000</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Chatham Village Market</h3>
+    <p>local top-ups, deli/seafood/bakery. 20 Queen Anne Rd, Chatham, ~8 min. 7am–7pm daily.</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=20%20Queen%20Anne%20Rd%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+      <a class="btn95" href="tel:+15089459783">📞 (508) 945-9783</a>
+      <a class="btn95" href="https://chathamvillagemarket.com" target="_blank" rel="noopener">🌐 chathamvillagemarket.com</a>
+    </div>
+  </div>
+  <div class="card">
+    <h3>Leaving - Aug 1</h3>
+    <ul><li>Tim/Amy take Callie to her departure</li></ul>
+  </div>
+</section>
+
+<section id="house">
+  <div class="h2box"><h2>🏠 Cape Cod House (VRBO)</h2></div>
+  <div class="card">
+    <p><b>124 Pleasant St, South Chatham, MA 02659</b></p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=124%20Pleasant%20St%2C%20South%20Chatham%2C%20MA%2002659" target="_blank" rel="noopener">🗺️ MAP IT</a>
+    </div>
+  </div>
+</section>
+
+<section id="beaches">
+  <div class="h2box"><h2 class="wordart">🏖️ Beaches</h2></div>
+  <div class="card">
+    <p class="fine">beach parking usually $15-$25/day — Chatham stickers: <a href="tel:+15089455180">(508) 945-5180</a> · <a href="https://chatham-ma.gov/311/Sticker-Office" target="_blank" rel="noopener">chatham-ma.gov/311/Sticker-Office</a></p>
+  </div>
+  <div class="card place">
+    <h3>Forest Beach</h3>
+    <p>Free parking, calm and shell covered. Beach shoes recommended</p>
+    <div class="btnrow"><a class="btn95" href="https://maps.google.com/?q=Forest%20Beach%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a></div>
+  </div>
+  <div class="card place">
+    <h3>Ridgevale Beach</h3>
+    <p>Tidal creek, crabs, good for kids</p>
+    <div class="btnrow"><a class="btn95" href="https://maps.google.com/?q=Ridgevale%20Beach%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a></div>
+  </div>
+  <div class="card place">
+    <h3>Hardings Beach</h3>
+    <p>Calm Nantucket Sound water, great sunsets, can walk to old lighthouse</p>
+    <div class="btnrow"><a class="btn95" href="https://maps.google.com/?q=Hardings%20Beach%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a></div>
+  </div>
+  <div class="card place crap">
+    <div class="ribbon" aria-hidden="true">💩 LEGENDARY 💩</div>
+    <h3><span class="crapname">Crap Beach</span></h3>
+    <p>If you need to crap, public crapping beach used by Indigenous tribes for their crap</p>
+    <p><b>💩 Location: you'll know it when you need it</b></p>
+  </div>
+  <div class="card place">
+    <h3>Lighthouse Beach</h3>
+    <p>Dramatic dunes, open ocean, steep stairs, tough parking</p>
+    <div class="btnrow"><a class="btn95" href="https://maps.google.com/?q=Lighthouse%20Beach%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a></div>
+  </div>
+  <div class="card place">
+    <h3>Cockle Cove Beach</h3>
+    <p>~5 min in South Chatham; calm, warm, shallow Sound water with a tidal creek. Best beach for the 2-year-old</p>
+    <div class="btnrow"><a class="btn95" href="https://maps.google.com/?q=Cockle%20Cove%20Beach%2C%20South%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a></div>
+  </div>
+</section>
+
+<section id="sights">
+  <div class="h2box"><h2>🗺️ Places to see</h2></div>
+  <div class="card place">
+    <h3>Monomoy National Wildlife Refuge</h3>
+    <p>Birds, tidal pools, horseshoe crabs. Great for low tide.</p>
+    <div class="btnrow">
+      <a class="btn95" href="tel:+15089450594">📞 (508) 945-0594</a>
+      <a class="btn95" href="https://fws.gov/refuge/monomoy" target="_blank" rel="noopener">🌐 fws.gov/refuge/monomoy</a>
+      <a class="btn95" href="https://maps.google.com/?q=Monomoy%20National%20Wildlife%20Refuge%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Chatham Dock <span class="blink" style="color:var(--red)">(ASK CALLIE ABOUT THIS)</span></h3>
+    <p>54 Barcliff Ave Ext (public pier).</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=54%20Barcliff%20Ave%20Ext%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+      <a class="btn95" href="tel:+15089453474">📞 Market: (508) 945-3474</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>AWSC Shark Center</h3>
+    <p>Thu-Sun, 10am–4pm. 235 Orleans Rd, Chatham.</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=235%20Orleans%20Rd%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+      <a class="btn95" href="tel:+15083485901">📞 (508) 348-5901</a>
+      <a class="btn95" href="https://atlanticwhiteshark.org" target="_blank" rel="noopener">🌐 atlanticwhiteshark.org</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Cape Cod Baseball League</h3>
+    <div class="btnrow"><a class="btn95" href="https://capecodleague.com/schedule" target="_blank" rel="noopener">🌐 capecodleague.com/schedule</a></div>
+  </div>
+  <div class="card place">
+    <h3>Kate Gould Park</h3>
+    <p>Chatham Band concerts: <a href="https://chathamband.org" target="_blank" rel="noopener">chathamband.org</a> (Fri ~8pm)</p>
+    <div class="btnrow"><a class="btn95" href="https://maps.google.com/?q=Kate%20Gould%20Park%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a></div>
+  </div>
+  <div class="card place">
+    <h3>Chatham Lighthouse overlook</h3>
+    <p>photo stop above Lighthouse Beach; seals below</p>
+    <div class="btnrow"><a class="btn95" href="https://maps.google.com/?q=Chatham%20Lighthouse%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a></div>
+  </div>
+  <div class="card place">
+    <h3>Main Street, Chatham</h3>
+    <p>shops, galleries, ice cream (Buffy's, Emack &amp; Bolio's)</p>
+    <div class="btnrow"><a class="btn95" href="https://maps.google.com/?q=Main%20Street%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a></div>
+  </div>
+  <div class="card place">
+    <h3>Cape Cod Rail Trail</h3>
+    <p>flat paved bike path; rent bikes in Harwich</p>
+    <div class="btnrow"><a class="btn95" href="https://maps.google.com/?q=Cape%20Cod%20Rail%20Trail%2C%20Harwich%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a></div>
+  </div>
+</section>
+
+<section id="rainy">
+  <div class="h2box"><h2>☔ Rainy Day</h2></div>
+  <div class="card place">
+    <h3>Grand Slam</h3>
+    <p>Bumper boats, batting cages, zip line. 322 Main St (Rte 28), Harwich Port.</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=322%20Main%20St%2C%20Harwich%20Port%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+      <a class="btn95" href="tel:+15084301155">📞 (508) 430-1155</a>
+      <a class="btn95" href="https://capecodbumperboats.com" target="_blank" rel="noopener">🌐 capecodbumperboats.com</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Chatham Orpheum</h3>
+    <p>Movie theater. 637 Main St, Chatham.</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=637%20Main%20St%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+      <a class="btn95" href="tel:+15089454900">📞 (508) 945-4900</a>
+      <a class="btn95" href="https://chathamorpheum.org" target="_blank" rel="noopener">🌐 chathamorpheum.org</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Cape Cod Museum of Natural History</h3>
+    <p>in Brewster. 869 Rte 6A.</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=869%20Rte%206A%2C%20Brewster%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+      <a class="btn95" href="tel:+15088963867">📞 (508) 896-3867</a>
+      <a class="btn95" href="https://ccmnh.org" target="_blank" rel="noopener">🌐 ccmnh.org</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Marconi Museum</h3>
+    <p>Chatham.</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://chathammarconi.org" target="_blank" rel="noopener">🌐 chathammarconi.org</a>
+      <a class="btn95" href="https://maps.google.com/?q=Marconi%20Museum%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+    </div>
+  </div>
+  <div class="card"><ul>
+    <li>shopping in Chatham</li>
+    <li>Day trip to Provincetown (~45 min) - shops, whale watching</li>
+  </ul></div>
+</section>
+
+<section id="food">
+  <div class="h2box"><h2>🍔 Food/Beer</h2></div>
+  <div class="card place">
+    <h3>Chatham Squire</h3>
+    <p>Loud, lobster rolls. 487 Main St, Chatham.</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=487%20Main%20St%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+      <a class="btn95" href="tel:+15089450945">📞 (508) 945-0945</a>
+      <a class="btn95" href="https://thesquire.com" target="_blank" rel="noopener">🌐 thesquire.com</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Cape Cod Beer</h3>
+    <p>(Hyannis).</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://capecodbeer.com" target="_blank" rel="noopener">🌐 capecodbeer.com</a>
+      <a class="btn95" href="tel:+15087904200">📞 (508) 790-4200</a>
+      <a class="btn95" href="https://maps.google.com/?q=Cape%20Cod%20Beer%2C%20Hyannis%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Devil's Purse</h3>
+    <p>(Dennis).</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://devilspursebrewing.com" target="_blank" rel="noopener">🌐 devilspursebrewing.com</a>
+      <a class="btn95" href="https://maps.google.com/?q=Devil's%20Purse%20Brewing%2C%20Dennis%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Impudent Oyster</h3>
+    <div class="btnrow">
+      <a class="btn95" href="tel:+15089453545">📞 (508) 945-3545</a>
+      <a class="btn95" href="https://theimpudentoyster.com" target="_blank" rel="noopener">🌐 theimpudentoyster.com</a>
+      <a class="btn95" href="https://maps.app.goo.gl/be6i7A5FC62vaVaQA?g_st=ic" target="_blank" rel="noopener">🗺️ MAP IT</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Outer Bar</h3>
+    <div class="btnrow">
+      <a class="btn95" href="tel:+15084325400">📞 (508) 432-5400</a>
+      <a class="btn95" href="https://wequassett.com/dining/outer-bar" target="_blank" rel="noopener">🌐 wequassett.com/dining/outer-bar</a>
+      <a class="btn95" href="https://maps.app.goo.gl/1uRvzcoDeyeR7Ntu6?g_st=ic" target="_blank" rel="noopener">🗺️ MAP IT</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Viera on Main</h3>
+    <div class="btnrow">
+      <a class="btn95" href="tel:+15089455033">📞 (508) 945-5033</a>
+      <a class="btn95" href="https://vieraonmain.com" target="_blank" rel="noopener">🌐 vieraonmain.com</a>
+      <a class="btn95" href="https://maps.app.goo.gl/JhQmEtQbWoz6NQbm7?g_st=ic" target="_blank" rel="noopener">🗺️ MAP IT</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Mac's Chatham Fish &amp; Lobster</h3>
+    <p>counter service, raw bar, lobster rolls, no reservations. Also a fish market. 1291 Main St (Rte 28), Chatham.</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=1291%20Main%20St%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+      <a class="btn95" href="tel:+15089451173">📞 (508) 945-1173</a>
+      <a class="btn95" href="https://macsseafood.com" target="_blank" rel="noopener">🌐 macsseafood.com</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Del Mar Bar &amp; Bistro</h3>
+    <p>wood-fired pizza + local seafood, family-friendly early. 907 Main St, Chatham.</p>
+    <div class="btnrow">
+      <a class="btn95" href="https://maps.google.com/?q=907%20Main%20St%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+      <a class="btn95" href="tel:+15089459988">📞 (508) 945-9988</a>
+      <a class="btn95" href="https://delmarbistro.com" target="_blank" rel="noopener">🌐 delmarbistro.com</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Beach House Grill (Chatham Bars Inn)</h3>
+    <p>on the sand, sunset clambakes. Splurge.</p>
+    <div class="btnrow">
+      <a class="btn95" href="tel:+15089450096">📞 (508) 945-0096</a>
+      <a class="btn95" href="https://chathambarsinn.com/dining/beach-house-grill" target="_blank" rel="noopener">🌐 chathambarsinn.com/dining/beach-house-grill</a>
+      <a class="btn95" href="https://maps.google.com/?q=Chatham%20Bars%20Inn%2C%20Chatham%2C%20MA" target="_blank" rel="noopener">🗺️ MAP IT</a>
+    </div>
+  </div>
+  <div class="card place">
+    <h3>Liquor stores</h3>
+    <p><b>South Chatham Liquors</b> (closest) <a href="tel:+15084301542">(508) 430-1542</a> · <a href="https://maps.google.com/?q=2447%20Main%20St%2C%20South%20Chatham%2C%20MA" target="_blank" rel="noopener">2447 Main St, South Chatham</a></p>
+    <p><b>Portside Liquors</b>, <a href="https://maps.google.com/?q=1421%20Rte%2039%2C%20East%20Harwich%2C%20MA" target="_blank" rel="noopener">1421 Rte 39 East Harwich</a>, <a href="tel:+15084321650">(508) 432-1650</a></p>
+    <p><b>Cranberry Liquors</b> <a href="tel:+15084328250">(508) 432-8250</a> · <a href="https://spiritofharwichport.com" target="_blank" rel="noopener">spiritofharwichport.com</a>, Harwich Port</p>
+  </div>
+</section>
+
+<section id="farts">
+  <div class="h2box"><h2><span class="blink" aria-hidden="true">🔥</span> <span class="wordart">💨 OFFICIAL FART RULES 💨</span> <span class="blink" aria-hidden="true">🔥</span></h2></div>
+  <div class="card">
+    <h3>Fart rules</h3>
+    <ol><li><b>Anytime, all the time</b></li></ol>
+  </div>
+</section>
+
+<section id="bring">
+  <div class="h2box"><h2>🎒 Bring</h2></div>
+  <div class="card">
+    <p class="fine">Tap to check off — saves on your phone, works offline in the beach parking lot.</p>
+    <label class="chk"><input type="checkbox"> <span>Beach Towels</span></label>
+    <label class="chk"><input type="checkbox"> <span>Beach blanket</span></label>
+    <label class="chk"><input type="checkbox"> <span>Games/cards - Tim to bring cards (poker chips 🤨)</span></label>
+    <label class="chk"><input type="checkbox"> <span>Water shoes</span></label>
+    <label class="chk"><input type="checkbox"> <span>Sunscreen</span></label>
+  </div>
+</section>
+
+<section id="crew">
+  <div class="h2box"><h2>✨ 👨‍👩‍👧 The Crew ✨</h2></div>
+  <div class="card">
+    <p>8 people — two in their 60s, two 40, two 38 with a 2-year-old, one 34.</p>
+  </div>
+</section>
+
+<section id="guestbook">
+  <div class="h2box"><h2 style="color:var(--sea)">📖 Sign Our Guestbook!!</h2></div>
+  <div class="card gb">
+    <p class="fine">(for fun — doesn't go anywhere)</p>
+    <form id="gbform">
+      <label for="gbname"><b>Your name:</b></label>
+      <input type="text" id="gbname" name="name" autocomplete="off">
+      <label for="gbmsg"><b>Your message:</b></label>
+      <textarea id="gbmsg" name="msg" rows="3"></textarea>
+      <button class="btn95" type="submit">✍️ SIGN IT!!</button>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <div class="card webring">
+    <a href="#top">« prev</a> | 🌀 Cape Cod Web Ring 🌀 | <a href="#top">next »</a>
+  </div>
+  <svg class="badge" width="176" height="62" viewBox="0 0 88 31" role="img" aria-label="Best viewed in Netscape Navigator 3.0"><rect width="88" height="31" fill="#001B4D" stroke="#8899AA"/><path d="M6 24V7l7 11V7" stroke="#fff" stroke-width="2.5" fill="none"/><text x="18" y="12" fill="#fff" font-size="5.5" font-family="Verdana">Best viewed in</text><text x="18" y="19" fill="#7FDBFF" font-size="5.5" font-family="Verdana">Netscape</text><text x="18" y="26" fill="#7FDBFF" font-size="5.5" font-family="Verdana">Navigator 3.0</text></svg>
+  <svg class="badge" width="176" height="62" viewBox="0 0 88 31" role="img" aria-label="Made with a lobster on a Macintosh"><rect width="88" height="31" fill="#333" stroke="#999"/><text x="44" y="13" fill="#FFD700" font-size="6" font-family="Verdana" text-anchor="middle">Made with 🦞</text><text x="44" y="24" fill="#fff" font-size="6" font-family="Verdana" text-anchor="middle">on a Macintosh</text></svg>
+  <p><span class="lcd" style="letter-spacing:1px;font-size:14px">Last updated: 07/13/2026 — webmaster: dad@shortfamily.cape</span></p>
+</footer>
+
+<script>
+// Visitor counter gag
+document.getElementById('counter').textContent =
+  String(400 + Math.floor(Math.random()*51)).padStart(6,'0');
+
+// Chill the page
+document.getElementById('chill').addEventListener('click', function(){
+  document.body.classList.toggle('paused');
+  this.textContent = document.body.classList.contains('paused') ? '▶ Un-chill' : '⏸ Chill the page';
+});
+
+// Guestbook
+document.getElementById('gbform').addEventListener('submit', function(e){
+  e.preventDefault();
+  this.outerHTML = '<p class="lcd">THANKS!! Your entry was saved to guestbook.cgi (not really)</p>';
+});
+
+// Bring checklist persistence
+document.querySelectorAll('.chk input').forEach(function(cb){
+  var key = 'cape-bring:' + cb.nextElementSibling.textContent.trim();
+  cb.checked = localStorage.getItem(key) === '1';
+  cb.addEventListener('change', function(){
+    localStorage.setItem(key, cb.checked ? '1' : '0');
+  });
+});
+
+// Fake MIDI toggle (WebAudio chiptune, never autoplays)
+(function(){
+  var btn = document.getElementById('midi'), ctx = null, timer = null, playing = false;
+  // Kokomo-ish riff (Hz)
+  var riff = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880.00, 698.46];
+  function playNote(freq){
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'square'; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.15, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.13);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + 0.14);
+  }
+  btn.addEventListener('click', function(){
+    if (playing){
+      clearInterval(timer); playing = false;
+      btn.textContent = '🎵 midi_beachboys.mid ▶';
+      return;
+    }
+    if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+    ctx.resume();
+    var i = 0;
+    playNote(riff[0]); i = 1;
+    timer = setInterval(function(){ playNote(riff[i % riff.length]); i++; }, 140);
+    playing = true;
+    btn.textContent = '⏹ stop the jams';
+  });
+})();
+</script>
+</body>
+</html>
