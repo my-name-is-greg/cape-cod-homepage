@@ -129,7 +129,7 @@ body.paused *{animation-play-state:paused!important}
   <a class="btn95" href="#bring">🎒 Bring</a>
   <a class="btn95" href="#crew">👨‍👩‍👧 Crew</a>
   <button class="btn95" id="chill" type="button">⏸ Chill the page</button>
-  <button class="btn95" id="midi" type="button">🎵 midi_beachboys.mid ▶</button>
+  <button class="btn95" id="midi" type="button">🎵 Drunken-Sailor.mid ▶</button>
 </nav>
 
 <main class="wrap">
@@ -475,33 +475,49 @@ document.querySelectorAll('.chk input').forEach(function(cb){
   });
 });
 
-// Fake MIDI toggle (WebAudio chiptune, never autoplays)
+// Real MIDI jukebox: Drunken-Sailor.mid, transcribed to [note, duration s, gap s].
+// Loops forever. Autoplays on first tap/click (browsers won't allow sooner).
 (function(){
   var btn = document.getElementById('midi'), ctx = null, timer = null, playing = false;
-  // Kokomo-ish riff (Hz)
-  var riff = [523.25, 659.25, 783.99, 659.25, 587.33, 698.46, 880.00, 698.46];
-  function playNote(freq){
+  var NOTES = [[69,0.326,0],[69,0.163,0],[69,0.163,0],[69,0.326,0],[69,0.163,0],[69,0.163,0],[69,0.326,0],[62,0.326,0],[65,0.326,0],[69,0.326,0],[67,0.326,0],[67,0.163,0],[67,0.163,0],[67,0.326,0],[67,0.163,0],[67,0.163,0],[67,0.326,0],[60,0.326,0],[64,0.326,0],[67,0.326,0],[69,0.326,0],[69,0.163,0],[69,0.163,0],[69,0.326,0],[69,0.163,0],[69,0.163,0],[69,0.326,0],[71,0.326,0],[72,0.326,0],[74,0.326,0],[72,0.326,0],[69,0.326,0],[67,0.326,0],[64,0.326,0],[62,0.652,0],[62,0.652,0],[69,0.652,0],[69,0.489,0],[69,0.163,0],[69,0.326,0],[62,0.326,0],[65,0.326,0],[69,0.326,0],[67,0.652,0],[67,0.489,0],[67,0.163,0],[67,0.326,0],[60,0.326,0],[64,0.326,0],[67,0.326,0],[69,0.652,0],[69,0.489,0],[69,0.163,0],[69,0.326,0],[71,0.326,0],[72,0.326,0],[74,0.326,0],[72,0.326,0],[69,0.326,0],[67,0.326,0],[64,0.326,0],[62,0.652,0],[62,0.652,0]];
+  function hz(n){ return 440 * Math.pow(2, (n - 69) / 12); }
+  function playNote(note, dur){
     var o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = 'square'; o.frequency.value = freq;
-    g.gain.setValueAtTime(0.15, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.13);
+    o.type = 'square'; o.frequency.value = hz(note);
+    g.gain.setValueAtTime(0.12, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
     o.connect(g); g.connect(ctx.destination);
-    o.start(); o.stop(ctx.currentTime + 0.14);
+    o.start(); o.stop(ctx.currentTime + dur + 0.01);
   }
-  btn.addEventListener('click', function(){
-    if (playing){
-      clearInterval(timer); playing = false;
-      btn.textContent = '🎵 midi_beachboys.mid ▶';
-      return;
-    }
+  function scheduleNext(i){
+    var n = NOTES[i % NOTES.length];
+    playNote(n[0], n[1]);
+    timer = setTimeout(function(){ scheduleNext(i + 1); }, (n[1] + n[2]) * 1000);
+  }
+  function start(){
+    if (playing) return;
     if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
     ctx.resume();
-    var i = 0;
-    playNote(riff[0]); i = 1;
-    timer = setInterval(function(){ playNote(riff[i % riff.length]); i++; }, 140);
+    scheduleNext(0);
     playing = true;
     btn.textContent = '⏹ stop the jams';
+  }
+  function stop(){
+    clearTimeout(timer); playing = false;
+    btn.textContent = '🎵 Drunken-Sailor.mid ▶';
+  }
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    playing ? stop() : start();
   });
+  // "Autoplay": kick in on the visitor's first interaction anywhere on the page
+  function autostart(){
+    document.removeEventListener('pointerdown', autostart);
+    document.removeEventListener('keydown', autostart);
+    start();
+  }
+  document.addEventListener('pointerdown', autostart);
+  document.addEventListener('keydown', autostart);
 })();
 </script>
 </body>
