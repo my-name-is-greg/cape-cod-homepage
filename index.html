@@ -965,6 +965,149 @@ document.querySelectorAll('.chk input').forEach(function(cb){
   });
   // No autoplay ambushes: music is strictly opt-in via the button.
 })();
+
+// 🦈 SCROLL SHARK — every few screens of scrolling, an 8-bit shark
+// swims across and takes a CHOMP out of the page. The bite heals.
+(function(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var main = document.querySelector('main');
+  if (!main) return;
+
+  // Pixel maps: B body, D dark, W teeth/white, E eye, . empty (shark faces left)
+  var OPEN = [
+    '..........B...............',
+    '.........BBB..............',
+    '........BBBB..............',
+    '...BBBBBBBBBBBB.......B...',
+    '..BBBBBBBBBBBBBBB....BB...',
+    '.BBEBBBBBBBBBBBBBB..BBB...',
+    'BBBBBBBBBBBBBBBBBBBBBB....',
+    'BWWWBBBBBBBBBBBBBBBBB.....',
+    '....WWWBBBBBBBBBBBBBB.....',
+    'BWWWWWWWWWBBBBBBB...BB....',
+    '.BBBBBBBBBB..BB......B....',
+    '......BBB.....B...........'
+  ];
+  var SHUT = [
+    '..........B...............',
+    '.........BBB..............',
+    '........BBBB..............',
+    '...BBBBBBBBBBBB.......B...',
+    '..BBBBBBBBBBBBBBB....BB...',
+    '.BBEBBBBBBBBBBBBBB..BBB...',
+    'BBBBBBBBBBBBBBBBBBBBBB....',
+    'BBWWWWBBBBBBBBBBBBBBB.....',
+    '.BBBBBBBBBBBBBBBBBBBB.....',
+    '..BBBBBBBBBBBBBBB...BB....',
+    '....BBBBBB...BB......B....',
+    '......BBB.....B...........'
+  ];
+  var COLORS = { B:'#6f87a3', W:'#ffffff', E:'#111111', D:'#3f5166' };
+  var PX = 6;
+
+  function frame(map){
+    var s = '';
+    for (var y = 0; y < map.length; y++)
+      for (var x = 0; x < map[y].length; x++){
+        var c = map[y][x];
+        if (c !== '.') s += '<rect x="'+(x*PX)+'" y="'+(y*PX)+'" width="'+PX+'" height="'+PX+'" fill="'+COLORS[c]+'"/>';
+      }
+    return s;
+  }
+
+  var W = 26*PX, H = 12*PX;
+  var scrolled = 0, lastY = window.scrollY, busy = false, coolUntil = 0, healTimer = null;
+  var target = innerHeight * (2.5 + Math.random()*2); // first shark after ~2.5–4.5 screens
+
+  window.addEventListener('scroll', function(){
+    var y = window.scrollY;
+    scrolled += Math.abs(y - lastY);
+    lastY = y;
+    if (!busy && !document.body.classList.contains('paused') && Date.now() > coolUntil && scrolled > target) launch();
+  }, {passive:true});
+
+  function bite(yInMain){
+    var d = 44, half = 44, steps = 5; // pixel staircase notch on the right edge
+    var pts = ['0 0','100% 0','100% '+(yInMain-half)+'px'];
+    var i;
+    for (i = 1; i <= steps; i++){
+      pts.push('calc(100% - '+Math.round(d*i/steps)+'px) '+Math.round(yInMain-half+half*(i-0.5)/steps)+'px');
+      pts.push('calc(100% - '+Math.round(d*i/steps)+'px) '+Math.round(yInMain-half+half*i/steps)+'px');
+    }
+    for (i = steps-1; i >= 0; i--){
+      pts.push('calc(100% - '+Math.round(d*i/steps)+'px) '+Math.round(yInMain+half*(steps-i-0.5)/steps)+'px');
+      pts.push('calc(100% - '+Math.round(d*i/steps)+'px) '+Math.round(yInMain+half*(steps-i)/steps)+'px');
+    }
+    pts.push('100% '+(yInMain+half)+'px','100% 100%','0 100%');
+    main.style.clipPath = 'polygon(' + pts.join(',') + ')';
+    clearTimeout(healTimer);
+    healTimer = setTimeout(function(){ main.style.clipPath = ''; }, 12000);
+  }
+
+  function launch(){
+    busy = true;
+    scrolled = 0;
+    var el = document.createElement('div');
+    el.setAttribute('aria-hidden','true');
+    el.style.cssText = 'position:fixed;z-index:9999;pointer-events:none;width:'+W+'px;height:'+H+'px;left:'+innerWidth+'px;';
+    var top = Math.round(innerHeight * (0.25 + Math.random()*0.5));
+    el.style.top = top + 'px';
+    el.innerHTML =
+      '<svg width="'+W+'" height="'+H+'" shape-rendering="crispEdges" style="display:block">' +
+      '<g class="shut">'+frame(SHUT)+'</g><g class="open" style="display:none">'+frame(OPEN)+'</g></svg>' +
+      '<div class="chompbubble" style="display:none;position:absolute;left:-14px;top:-34px;background:#fff;border:3px solid #000;' +
+      'font:bold 16px \'Comic Sans MS\',\'Comic Sans\',cursive;padding:2px 8px;white-space:nowrap">CHOMP!!</div>';
+    document.body.appendChild(el);
+
+    var shut = el.querySelector('.shut'), open = el.querySelector('.open'), bub = el.querySelector('.chompbubble');
+    var rect = main.getBoundingClientRect();
+    var chompX = Math.min(rect.right - 18, innerWidth - W); // shark mouth lands on content's right edge
+    var startX = innerWidth, x = startX, speed = Math.max(4, innerWidth/220);
+    var phase = 0, chompT = 0, bob0 = Math.random()*6.28;
+
+    function step(){
+      if (phase === 0){ // swim in
+        x -= speed;
+        // idle mouth: slow open/close while cruising
+        var t = Date.now()/300;
+        open.style.display = (Math.sin(t) > 0.6) ? '' : 'none';
+        shut.style.display = (Math.sin(t) > 0.6) ? 'none' : '';
+        if (x <= chompX){ x = chompX; phase = 1; chompT = Date.now(); doChomp(); }
+      } else if (phase === 2){ // swim off
+        x -= speed * 1.4;
+        if (x < -W - 20){ el.remove(); busy = false; return; }
+      }
+      el.style.left = x + 'px';
+      el.style.transform = 'translateY(' + Math.round(Math.sin(bob0 + Date.now()/400)*5) + 'px)';
+      requestAnimationFrame(step);
+    }
+
+    function doChomp(){
+      bub.style.display = '';
+      var flips = 0;
+      var iv = setInterval(function(){
+        var isOpen = open.style.display !== 'none';
+        open.style.display = isOpen ? 'none' : '';
+        shut.style.display = isOpen ? '' : 'none';
+        flips++;
+        if (flips === 3){ // jaws snap shut: take the bite
+          var mouthY = el.getBoundingClientRect().top + H*0.65;
+          bite(mouthY - main.getBoundingClientRect().top);
+        }
+        if (flips >= 5){
+          clearInterval(iv);
+          bub.style.display = 'none';
+          open.style.display = 'none'; shut.style.display = '';
+          phase = 2;
+        }
+      }, 160);
+    }
+
+    requestAnimationFrame(step);
+    coolUntil = Date.now() + 40000; // at least 40s between sharks
+    target = innerHeight * (3 + Math.random()*2.5); // next one after ~3–5.5 screens
+  }
+})();
 </script>
 </body>
 </html>
