@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>🧱 JETTY BLOCKS — Cape Cod Homepage</title>
+<meta name="theme-color" content="#008080">
+<style>
+:root{--sand:#FFF8E1;--ink:#1A1A2E;--sea:#008080;--hotpink:#FF1493;--lime:#32CD32;--sun:#FFD700;--purple:#8A2BE2;--red:#FF3B30;--btnface:#C0C0C0}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:16px/1.5 Verdana,Geneva,Tahoma,sans-serif;background:#B2E5E5;touch-action:manipulation}
+.wrap{max-width:640px;margin:0 auto;padding:8px 12px 40px}
+h1,h2{font-family:"Comic Sans MS","Comic Sans","Chalkboard SE",cursive;margin:8px 0}
+h1{font-size:clamp(22px,6.5vw,34px);text-align:center}
+.wordart{background:linear-gradient(90deg,#FF1493,#FFD700,#32CD32,#008080,#8A2BE2);-webkit-background-clip:text;background-clip:text;color:var(--hotpink);filter:drop-shadow(2px 2px 0 #000)}
+@supports (background-clip:text) or (-webkit-background-clip:text){.wordart{color:transparent}}
+.card{background:var(--sand);border:3px ridge var(--sea);box-shadow:4px 4px 0 rgba(0,0,0,.35);padding:12px;margin:0 0 12px}
+.btn95{background:var(--btnface);border:3px outset #fff;color:#000;font:bold 16px Verdana,sans-serif;min-height:44px;min-width:44px;padding:10px 16px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.btn95:active{border-style:inset;transform:translate(1px,1px)}
+.lcd{font-family:"Courier New",monospace;background:#000;color:#32CD32;letter-spacing:2px;padding:4px 8px;border:2px inset #808080;display:inline-block}
+.blink{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.fine{font-size:13px;color:#444}
+.hud{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:0 0 8px}
+#playarea{display:flex;gap:10px;justify-content:center;align-items:flex-start}
+#stagebox{position:relative;border:4px ridge var(--sea);box-shadow:4px 4px 0 rgba(0,0,0,.35);background:#04314a;line-height:0}
+#board{display:block;touch-action:none}
+#side{display:flex;flex-direction:column;gap:8px;align-items:center}
+.nextbox{background:#04314a;border:3px ridge var(--sea);padding:4px;line-height:0}
+#overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(178,229,229,.92);text-align:center;padding:16px;z-index:10;line-height:1.5}
+#overlay h2{margin:0}
+#overlay.hidden{display:none}
+.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;justify-content:center;margin-top:10px;max-width:420px;margin-left:auto;margin-right:auto}
+.padbtn{font-size:24px;min-height:56px;user-select:none;-webkit-user-select:none}
+.dropbtn{grid-column:1 / -1;font-size:18px;min-height:52px}
+.gameover-art{font-size:52px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1><span class="wordart">🧱 JETTY BLOCKS 🧱</span></h1>
+<p style="text-align:center;margin:0 0 8px"><span class="lcd" style="font-size:12px">STACK ROCKS. CLEAR ROWS. BEAT DAD.</span></p>
+
+<div class="hud">
+  <span class="lcd">⭐ <span id="score">0</span></span>
+  <span class="lcd">📏 ROWS: <span id="lines">0</span></span>
+  <span class="lcd">🌊 LVL: <span id="level">1</span></span>
+  <span class="lcd">🏆 BEST: <span id="best">0</span></span>
+</div>
+
+<div id="playarea">
+  <div id="stagebox">
+    <canvas id="board" width="240" height="432" aria-label="Jetty Blocks game board"></canvas>
+    <div id="overlay">
+      <h2 class="wordart" style="font-size:24px">🌊 THE TIDE IS COMING 🌊</h2>
+      <p style="max-width:360px;margin:0;font-size:14px">The harbormaster needs the jetty rebuilt before high tide. Stack the falling blocks, fill a whole row to lock it in. Arrow keys, or the buttons below. ⬆ / ⟳ rotates, DROP slams it down.</p>
+      <p class="fine blink" style="margin:0">every 10 rows the tide speeds up!!</p>
+      <button class="btn95" id="startbtn" style="font-size:20px">🧱 START STACKING</button>
+    </div>
+  </div>
+  <div id="side">
+    <span class="lcd" style="font-size:11px">NEXT</span>
+    <div class="nextbox"><canvas id="next" width="96" height="96"></canvas></div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn95 padbtn" id="leftbtn" aria-label="move left">◀️</button>
+  <button class="btn95 padbtn" id="rotbtn" aria-label="rotate">⟳</button>
+  <button class="btn95 padbtn" id="rightbtn" aria-label="move right">▶️</button>
+  <button class="btn95 padbtn" id="downbtn" aria-label="soft drop">🔽</button>
+  <button class="btn95 dropbtn" id="dropbtn" aria-label="hard drop">⏬ FULL SEND ⏬</button>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <p class="fine" style="margin:0">☝️ SCIENCE CORNER: the Chatham jetty was built one rock at a time by people who never once got to press FULL SEND. High score is saved on this phone — settle it at dinner.</p>
+</div>
+
+<div class="card" style="text-align:center">
+  <p style="margin:0 0 8px;font-weight:bold">🕹️ MORE FROM THE ARCADE 🕹️</p>
+  <div class="hud" style="margin:0">
+    <a class="btn95" href="game.html">🦈 SHARK DODGE</a>
+    <a class="btn95" href="gulls.html">💩 GULL PATROL</a>
+    <a class="btn95" href="tidepool.html">🦀 TIDE POOL ZEN</a>
+  </div>
+</div>
+
+<p style="text-align:center"><a class="btn95" href="index.html">🏠 BACK TO HOMEPAGE</a></p>
+</div>
+
+<script>
+(function(){
+  var COLS = 10, ROWS = 18, CELL = 24;
+  var canvas = document.getElementById('board');
+  var ctx = canvas.getContext('2d');
+  var nextCanvas = document.getElementById('next');
+  var nctx = nextCanvas.getContext('2d');
+  var overlay = document.getElementById('overlay');
+  var scoreEl = document.getElementById('score');
+  var linesEl = document.getElementById('lines');
+  var levelEl = document.getElementById('level');
+  var bestEl = document.getElementById('best');
+  var BEST_KEY = 'cape-jetty-best';
+  bestEl.textContent = localStorage.getItem(BEST_KEY) || 0;
+
+  // beach-colored pieces
+  var COLORS = ['#FF1493','#FFD700','#32CD32','#FF8C00','#7FDBFF','#8A2BE2','#FF3B30'];
+  var SHAPES = [
+    [[1,1,1,1]],           // I
+    [[1,1],[1,1]],         // O
+    [[0,1,0],[1,1,1]],     // T
+    [[1,0,0],[1,1,1]],     // J
+    [[0,0,1],[1,1,1]],     // L
+    [[0,1,1],[1,1,0]],     // S
+    [[1,1,0],[0,1,1]]      // Z
+  ];
+
+  var cur, nextPiece, score, lines, level, running = false;
+  var dropTimer = 0, lastTime = 0, raf = null;
+
+  function newGrid(){
+    var g = [];
+    for (var r = 0; r < ROWS; r++){ g.push(new Array(COLS).fill(0)); }
+    return g;
+  }
+  var grid = newGrid();
+
+  function randPiece(){
+    var i = Math.floor(Math.random() * SHAPES.length);
+    return { shape: SHAPES[i].map(function(row){ return row.slice(); }), color: i + 1,
+      x: Math.floor((COLS - SHAPES[i][0].length) / 2), y: 0 };
+  }
+  function rotate(shape){
+    var h = shape.length, w = shape[0].length, out = [];
+    for (var c = 0; c < w; c++){
+      var row = [];
+      for (var r = h - 1; r >= 0; r--) row.push(shape[r][c]);
+      out.push(row);
+    }
+    return out;
+  }
+  function collides(shape, x, y){
+    for (var r = 0; r < shape.length; r++)
+      for (var c = 0; c < shape[r].length; c++){
+        if (!shape[r][c]) continue;
+        var gx = x + c, gy = y + r;
+        if (gx < 0 || gx >= COLS || gy >= ROWS) return true;
+        if (gy >= 0 && grid[gy][gx]) return true;
+      }
+    return false;
+  }
+  function merge(){
+    for (var r = 0; r < cur.shape.length; r++)
+      for (var c = 0; c < cur.shape[r].length; c++)
+        if (cur.shape[r][c] && cur.y + r >= 0) grid[cur.y + r][cur.x + c] = cur.color;
+  }
+  function clearRows(){
+    var cleared = 0;
+    for (var r = ROWS - 1; r >= 0; r--){
+      if (grid[r].every(function(v){ return v; })){
+        grid.splice(r, 1);
+        grid.unshift(new Array(COLS).fill(0));
+        cleared++; r++;
+      }
+    }
+    if (cleared){
+      lines += cleared;
+      score += [0, 100, 300, 500, 800][cleared] * level;
+      var newLevel = 1 + Math.floor(lines / 10);
+      if (newLevel > level){ level = newLevel; plink(880); plink(1174); }
+      else { plink(520 + cleared * 120); }
+      linesEl.textContent = lines; levelEl.textContent = level;
+      scoreEl.textContent = score;
+    }
+  }
+  function dropInterval(){ return Math.max(90, 800 - (level - 1) * 70); }
+
+  function spawn(){
+    cur = nextPiece || randPiece();
+    nextPiece = randPiece();
+    drawNext();
+    if (collides(cur.shape, cur.x, cur.y)) return gameOver();
+  }
+
+  function move(dx){
+    if (!running) return;
+    if (!collides(cur.shape, cur.x + dx, cur.y)){ cur.x += dx; draw(); }
+  }
+  function rot(){
+    if (!running) return;
+    var s = rotate(cur.shape);
+    // simple wall kicks
+    var kicks = [0, -1, 1, -2, 2];
+    for (var i = 0; i < kicks.length; i++){
+      if (!collides(s, cur.x + kicks[i], cur.y)){
+        cur.shape = s; cur.x += kicks[i]; plink(440); draw(); return;
+      }
+    }
+  }
+  function softDrop(){
+    if (!running) return;
+    if (!collides(cur.shape, cur.x, cur.y + 1)){ cur.y++; score += 1; scoreEl.textContent = score; }
+    else lock();
+    dropTimer = 0; draw();
+  }
+  function hardDrop(){
+    if (!running) return;
+    var d = 0;
+    while (!collides(cur.shape, cur.x, cur.y + 1)){ cur.y++; d++; }
+    score += d * 2; scoreEl.textContent = score;
+    plink(220);
+    lock(); dropTimer = 0; draw();
+  }
+  function lock(){
+    merge(); clearRows(); spawn();
+  }
+
+  function cell(context, x, y, colorIdx, size){
+    context.fillStyle = COLORS[colorIdx - 1];
+    context.fillRect(x, y, size, size);
+    // chunky 90s bevel
+    context.fillStyle = 'rgba(255,255,255,.45)';
+    context.fillRect(x, y, size, 3); context.fillRect(x, y, 3, size);
+    context.fillStyle = 'rgba(0,0,0,.35)';
+    context.fillRect(x, y + size - 3, size, 3); context.fillRect(x + size - 3, y, 3, size);
+  }
+
+  function draw(){
+    ctx.fillStyle = '#04314a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // faint grid
+    ctx.strokeStyle = 'rgba(255,255,255,.06)';
+    for (var c = 1; c < COLS; c++){ ctx.beginPath(); ctx.moveTo(c*CELL,0); ctx.lineTo(c*CELL,ROWS*CELL); ctx.stroke(); }
+    for (var r = 0; r < ROWS; r++)
+      for (var cc = 0; cc < COLS; cc++)
+        if (grid[r][cc]) cell(ctx, cc*CELL, r*CELL, grid[r][cc], CELL);
+    if (cur && running){
+      // ghost piece shows where it will land
+      var gy = cur.y;
+      while (!collides(cur.shape, cur.x, gy + 1)) gy++;
+      ctx.globalAlpha = .22;
+      for (var r2 = 0; r2 < cur.shape.length; r2++)
+        for (var c2 = 0; c2 < cur.shape[r2].length; c2++)
+          if (cur.shape[r2][c2]) cell(ctx, (cur.x+c2)*CELL, (gy+r2)*CELL, cur.color, CELL);
+      ctx.globalAlpha = 1;
+      for (var r3 = 0; r3 < cur.shape.length; r3++)
+        for (var c3 = 0; c3 < cur.shape[r3].length; c3++)
+          if (cur.shape[r3][c3] && cur.y + r3 >= 0) cell(ctx, (cur.x+c3)*CELL, (cur.y+r3)*CELL, cur.color, CELL);
+    }
+  }
+  function drawNext(){
+    nctx.fillStyle = '#04314a';
+    nctx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
+    var s = nextPiece.shape, sz = 20;
+    var ox = (nextCanvas.width - s[0].length * sz) / 2;
+    var oy = (nextCanvas.height - s.length * sz) / 2;
+    for (var r = 0; r < s.length; r++)
+      for (var c = 0; c < s[r].length; c++)
+        if (s[r][c]) cell(nctx, ox + c*sz, oy + r*sz, nextPiece.color, sz);
+  }
+
+  function loop(now){
+    if (!running) return;
+    var dt = now - lastTime; lastTime = now;
+    dropTimer += dt;
+    if (dropTimer > dropInterval()){
+      dropTimer = 0;
+      if (!collides(cur.shape, cur.x, cur.y + 1)) cur.y++;
+      else lock();
+      draw();
+    }
+    raf = requestAnimationFrame(loop);
+  }
+
+  // tiny retro plink — only ever after user gesture (game started by tap)
+  var actx = null;
+  function plink(f){
+    try{
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'square'; o.frequency.value = f;
+      g.gain.setValueAtTime(.08, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001, actx.currentTime + .15);
+      o.connect(g); g.connect(actx.destination);
+      o.start(); o.stop(actx.currentTime + .16);
+    }catch(e){}
+  }
+
+  function gameOver(){
+    running = false;
+    cancelAnimationFrame(raf);
+    plink(160); plink(110);
+    var best = +(localStorage.getItem(BEST_KEY) || 0);
+    var isBest = score > best;
+    if (isBest) localStorage.setItem(BEST_KEY, score);
+    bestEl.textContent = Math.max(best, score);
+    overlay.innerHTML =
+      '<div class="gameover-art">🌊🧱</div>' +
+      '<h2 class="wordart" style="font-size:24px">HIGH TIDE!!</h2>' +
+      '<p style="margin:0">The jetty topped out at <b>' + score + ' points</b> and <b>' + lines + ' rows</b>.' +
+      (isBest ? '<br><span class="blink" style="color:var(--hotpink);font-weight:bold">☆ NEW FAMILY RECORD ☆</span>' : '') + '</p>' +
+      '<p class="fine" style="margin:0">the ocean remains undefeated since 1997</p>' +
+      '<button class="btn95" id="startbtn" style="font-size:20px">🔁 REBUILD IT</button>';
+    overlay.classList.remove('hidden');
+    document.getElementById('startbtn').addEventListener('click', start);
+  }
+
+  function start(){
+    overlay.classList.add('hidden');
+    grid = newGrid();
+    score = 0; lines = 0; level = 1;
+    scoreEl.textContent = 0; linesEl.textContent = 0; levelEl.textContent = 1;
+    nextPiece = null;
+    spawn();
+    running = true; dropTimer = 0; lastTime = performance.now();
+    draw();
+    raf = requestAnimationFrame(loop);
+  }
+  document.getElementById('startbtn').addEventListener('click', start);
+
+  // keyboard
+  window.addEventListener('keydown', function(e){
+    if (!running) return;
+    if (e.key === 'ArrowLeft'){ move(-1); e.preventDefault(); }
+    else if (e.key === 'ArrowRight'){ move(1); e.preventDefault(); }
+    else if (e.key === 'ArrowUp' || e.key === 'x' || e.key === 'X'){ rot(); e.preventDefault(); }
+    else if (e.key === 'ArrowDown'){ softDrop(); e.preventDefault(); }
+    else if (e.key === ' '){ hardDrop(); e.preventDefault(); }
+  });
+
+  // touch buttons — tap acts once, holding left/right/down repeats
+  function pad(btn, fn, repeat){
+    var iv = null;
+    ['pointerdown','touchstart'].forEach(function(ev){
+      btn.addEventListener(ev, function(e){
+        e.preventDefault();
+        if (iv) return;
+        fn();
+        if (repeat) iv = setInterval(fn, 120);
+      }, {passive:false});
+    });
+    ['pointerup','pointercancel','touchend','mouseleave'].forEach(function(ev){
+      btn.addEventListener(ev, function(){ if (iv){ clearInterval(iv); iv = null; } });
+    });
+  }
+  pad(document.getElementById('leftbtn'), function(){ move(-1); }, true);
+  pad(document.getElementById('rightbtn'), function(){ move(1); }, true);
+  pad(document.getElementById('downbtn'), softDrop, true);
+  pad(document.getElementById('rotbtn'), rot, false);
+  pad(document.getElementById('dropbtn'), hardDrop, false);
+
+  // tap the board to rotate, swipe to move / slam
+  var touchStart = null;
+  canvas.addEventListener('touchstart', function(e){
+    if (!running) return;
+    touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, {passive:true});
+  canvas.addEventListener('touchend', function(e){
+    if (!running || !touchStart) return;
+    var dx = e.changedTouches[0].clientX - touchStart.x;
+    var dy = e.changedTouches[0].clientY - touchStart.y;
+    if (Math.abs(dx) < 20 && Math.abs(dy) < 20) rot();
+    else if (dy > 60 && Math.abs(dx) < 50) hardDrop();
+    else if (Math.abs(dx) >= 20) move(dx > 0 ? 1 : -1);
+    touchStart = null;
+  });
+
+  // size canvas crisply for the screen
+  function fit(){
+    var maxW = Math.min(document.getElementById('playarea').clientWidth - 120, 280);
+    var scale = Math.max(1, Math.min(maxW / (COLS * CELL), (window.innerHeight * .55) / (ROWS * CELL)));
+    canvas.style.width = (COLS * CELL * scale) + 'px';
+    canvas.style.height = (ROWS * CELL * scale) + 'px';
+  }
+  window.addEventListener('resize', fit);
+  fit();
+  draw();
+})();
+</script>
+</body>
+</html>

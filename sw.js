@@ -2,8 +2,8 @@
 // so the address/phone numbers load with zero bars at the beach.
 // Weather/tide API calls pass straight through to the network
 // (the page already shows "SATELLITE LINK LOST" when they fail).
-var CACHE = 'cape-cod-v4';
-var ASSETS = ['./', 'index.html', 'game.html', 'gulls.html', 'tidepool.html', 'manifest.json', 'icon.svg'];
+var CACHE = 'cape-cod-v5';
+var ASSETS = ['./', 'index.html', 'game.html', 'gulls.html', 'tidepool.html', 'tetris.html', 'manifest.json', 'icon.svg'];
 
 self.addEventListener('install', function(e){
   e.waitUntil(caches.open(CACHE).then(function(c){ return c.addAll(ASSETS); }));
