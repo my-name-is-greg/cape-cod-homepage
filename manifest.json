@@ -1,0 +1,13 @@
+{
+  "name": "Cape Cod Homepage!!!",
+  "short_name": "Cape Cod",
+  "description": "The Short Family Cape Cod trip site — Chatham, MA, July 25 to Aug 1",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#B2E5E5",
+  "theme_color": "#008080",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

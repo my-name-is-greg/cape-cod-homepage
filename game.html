@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <meta name="robots" content="noindex, nofollow">
 <title>🦈 SHARK DODGE!!! 🏊 — Cape Cod Homepage</title>
 <style>
@@ -47,7 +49,7 @@
   }
   .btn:active { background: #d40000; color: #ffe600; }
   #fire { font-size: 16px; }
-  #hint { color: #9fd3ff; font-size: 11px; text-align: center; }
+  #hint { color: #9fd3ff; font-size: 13px; text-align: center; }
   @media (prefers-reduced-motion: reduce){.marquee span{animation:none}}
 </style>
 </head>
@@ -60,10 +62,10 @@
   <h1>&#128694; SHARK DODGE! &#129416;</h1>
   <canvas id="game" width="320" height="420"></canvas>
   <div id="controls">
-    <button class="btn" id="left">&#9664;</button>
+    <button class="btn" id="left" aria-label="Swim left">&#9664;</button>
     <button class="btn" id="fire">FIRE &#128481;</button>
-    <button class="btn" id="right">&#9654;</button>
-    <button class="btn" id="mute">&#128266;</button>
+    <button class="btn" id="right" aria-label="Swim right">&#9654;</button>
+    <button class="btn" id="mute" aria-label="Toggle sound">&#128266;</button>
   </div>
   <div id="hint">Thumb drag to swim &middot; tap FIRE for harpoons &middot; grab ammo</div>
 </div>
@@ -391,6 +393,7 @@ function holdBtn(id, dir) {
   const off = e => { e.preventDefault(); if (moveDir === dir) moveDir = 0; };
   el.addEventListener('touchstart', on, {passive:false});
   el.addEventListener('touchend', off, {passive:false});
+  el.addEventListener('touchcancel', off, {passive:false});
   el.addEventListener('mousedown', on);
   el.addEventListener('mouseup', off);
   el.addEventListener('mouseleave', off);
@@ -423,6 +426,9 @@ document.addEventListener('keyup', e => {
   if (e.key === 'ArrowLeft' && moveDir === -1) moveDir = 0;
   if (e.key === 'ArrowRight' && moveDir === 1) moveDir = 0;
 });
+
+// Offline mode: same cache as the homepage
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
 </script>
 </body>
 </html>
