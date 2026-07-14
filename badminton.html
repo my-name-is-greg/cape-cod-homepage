@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>🏸 BACKYARD BADMINTON — Cape Cod Homepage</title>
+<meta name="theme-color" content="#008080">
+<style>
+:root{--sand:#FFF8E1;--ink:#1A1A2E;--sea:#008080;--hotpink:#FF1493;--lime:#32CD32;--sun:#FFD700;--purple:#8A2BE2;--red:#FF3B30;--btnface:#C0C0C0}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:16px/1.5 Verdana,Geneva,Tahoma,sans-serif;background:#B2E5E5;touch-action:manipulation}
+.wrap{max-width:640px;margin:0 auto;padding:8px 12px 40px}
+h1,h2{font-family:"Comic Sans MS","Comic Sans","Chalkboard SE",cursive;margin:8px 0}
+h1{font-size:clamp(22px,6.5vw,34px);text-align:center}
+.wordart{background:linear-gradient(90deg,#FF1493,#FFD700,#32CD32,#008080,#8A2BE2);-webkit-background-clip:text;background-clip:text;color:var(--hotpink);filter:drop-shadow(2px 2px 0 #000)}
+@supports (background-clip:text) or (-webkit-background-clip:text){.wordart{color:transparent}}
+.card{background:var(--sand);border:3px ridge var(--sea);box-shadow:4px 4px 0 rgba(0,0,0,.35);padding:12px;margin:0 0 12px}
+.btn95{background:var(--btnface);border:3px outset #fff;color:#000;font:bold 16px Verdana,sans-serif;min-height:44px;min-width:44px;padding:10px 16px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.btn95:active{border-style:inset;transform:translate(1px,1px)}
+.lcd{font-family:"Courier New",monospace;background:#000;color:#32CD32;letter-spacing:2px;padding:4px 8px;border:2px inset #808080;display:inline-block}
+.blink{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.fine{font-size:13px;color:#444}
+.hud{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:0 0 8px}
+#stage{position:relative;border:4px ridge var(--sea);box-shadow:4px 4px 0 rgba(0,0,0,.35);background:#000;line-height:0}
+#cv{display:block;width:100%;height:auto;image-rendering:pixelated;image-rendering:crisp-edges;-ms-interpolation-mode:nearest-neighbor}
+#overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(178,229,229,.9);text-align:center;padding:14px;z-index:10;line-height:1.5}
+#overlay h2{margin:0}
+#overlay.hidden{display:none}
+.controls{display:flex;gap:8px;justify-content:center;margin-top:8px}
+.padbtn{flex:1;max-width:180px;font-size:26px;min-height:60px}
+.gameover-art{font-size:52px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1><span class="wordart">🏸 BACKYARD BADMINTON 🏸</span></h1>
+<p style="text-align:center;margin:0 0 8px"><span class="lcd" style="font-size:12px">THE NET IS SAGGING. THE WIND IS CHEATING.</span></p>
+
+<div class="hud">
+  <span class="lcd">YOU <span id="pscore">0</span></span>
+  <span class="lcd">GRAMPS <span id="cscore">0</span></span>
+  <span class="lcd">🏆 WINS: <span id="best">0</span></span>
+</div>
+
+<div id="stage">
+  <canvas id="cv" width="320" height="200" aria-label="Backyard Badminton game area"></canvas>
+  <div id="overlay">
+    <h2 class="wordart" style="font-size:24px">🏸 FIRST TO 11 🏸</h2>
+    <p style="max-width:430px;margin:0;font-size:14px">The net is a clothesline. The court is a lawn. Your opponent is a man in his 60s who has been playing this exact game since 1978 and he does not intend to lose to you.</p>
+    <p class="fine" style="margin:0">◀️ ▶️ move &nbsp;·&nbsp; ⬆️ / SPACE jump &nbsp;·&nbsp; the birdie floats. the wind lies.</p>
+    <button class="btn95" id="startbtn" style="font-size:20px">🏸 SERVE IT UP</button>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn95 padbtn" id="leftbtn" aria-label="move left">◀️</button>
+  <button class="btn95 padbtn" id="jumpbtn" aria-label="jump">⬆️</button>
+  <button class="btn95 padbtn" id="rightbtn" aria-label="move right">▶️</button>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <p class="fine" style="margin:0">☝️ SCIENCE CORNER: a shuttlecock leaves the racket faster than any other object in sport and then immediately gives up. That's drag. That's also why the wind off the Sound gets a vote on every single point. Wins are saved on this phone.</p>
+</div>
+
+<div class="card" style="text-align:center">
+  <p style="margin:0 0 8px;font-weight:bold">🕹️ MORE FROM THE ARCADE 🕹️</p>
+  <div class="hud" style="margin:0">
+    <a class="btn95" href="game.html">🦈 SHARK DODGE</a>
+    <a class="btn95" href="gulls.html">💩 GULL PATROL</a>
+    <a class="btn95" href="tetris.html">🧱 JETTY BLOCKS</a>
+    <a class="btn95" href="tidepool.html">🦀 TIDE POOL ZEN</a>
+    <a class="btn95" href="butt.html">🍑 MY HAIRY BUTT</a>
+  </div>
+</div>
+
+<p style="text-align:center"><a class="btn95" href="index.html">🏠 BACK TO HOMEPAGE</a></p>
+</div>
+
+<script>
+(function(){
+  var cv = document.getElementById('cv');
+  var ctx = cv.getContext('2d');
+  var overlay = document.getElementById('overlay');
+  var pScoreEl = document.getElementById('pscore');
+  var cScoreEl = document.getElementById('cscore');
+  var bestEl = document.getElementById('best');
+  var BEST_KEY = 'cape-badminton-wins';
+  bestEl.textContent = localStorage.getItem(BEST_KEY) || 0;
+
+  var W = 320, H = 200;
+  var GROUND = 176;          // top of the lawn
+  var NET_X = 160, NET_TOP = 108, NET_W = 3;
+  var GRAV = 0.36, JUMP = -5.6, SPEED = 2.4;
+  var WIN_SCORE = 11;
+
+  var P = { x: 70,  y: GROUND, vy: 0, r: 12, face: 1 };
+  var C = { x: 250, y: GROUND, vy: 0, r: 12, face: -1, err: 0, errT: 0 };
+  var bird, wind = 0, windTarget = 0, windTimer = 0;
+  var pScore = 0, cScore = 0, rallyHits = 0;
+  var running = false, raf = null, freeze = 0, msg = '', msgT = 0;
+  var keys = { left:false, right:false, up:false };
+  var pad = { left:false, right:false, up:false };
+
+  function serve(toPlayer){
+    bird = {
+      x: toPlayer ? 80 : 240,
+      y: 60,
+      vx: 0,
+      vy: 0,
+      spin: 0,
+      live: true
+    };
+    rallyHits = 0;
+  }
+
+  function reset(){
+    P.x = 70; P.y = GROUND; P.vy = 0;
+    C.x = 250; C.y = GROUND; C.vy = 0;
+    pScore = cScore = 0;
+    pScoreEl.textContent = 0; cScoreEl.textContent = 0;
+    wind = windTarget = 0; windTimer = 0;
+    freeze = 0; msg = ''; msgT = 0;
+    serve(true);
+  }
+
+  // ---- retro plink (only after the user taps START, so autoplay is happy)
+  var actx = null;
+  function plink(f, type, len){
+    try{
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = type || 'square'; o.frequency.value = f;
+      g.gain.setValueAtTime(.07, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001, actx.currentTime + (len || .12));
+      o.connect(g); g.connect(actx.destination);
+      o.start(); o.stop(actx.currentTime + (len || .12) + .01);
+    }catch(e){}
+  }
+
+  function hitPlayer(pl, dirBias){
+    var dx = bird.x - pl.x, dy = bird.y - (pl.y - pl.r);
+    var d = Math.hypot(dx, dy);
+    if (d > pl.r + 8) return false;
+    if (d < 0.001){ dx = dirBias; dy = -1; d = 1; }
+    var nx = dx / d, ny = dy / d;
+    var power = 4.3 + Math.min(rallyHits * 0.12, 2.2);
+    bird.vx = nx * power + dirBias * 1.5;
+    bird.vy = ny * power - 2.6 - Math.abs(pl.vy) * 0.35;
+    if (bird.vy > -1.1) bird.vy = -1.1;   // always pop it up. it's badminton.
+    bird.x = pl.x + nx * (pl.r + 9);
+    bird.y = (pl.y - pl.r) + ny * (pl.r + 9);
+    rallyHits++;
+    plink(560 + rallyHits * 25, 'square', .07);
+    return true;
+  }
+
+  function point(toPlayer){
+    if (toPlayer){ pScore++; pScoreEl.textContent = pScore; msg = 'YOUR POINT!'; plink(880,'square',.18); }
+    else { cScore++; cScoreEl.textContent = cScore; msg = 'GRAMPS SCORES'; plink(140,'sawtooth',.25); }
+    msgT = 70;
+    bird.live = false;
+    freeze = 55;
+
+    if (pScore >= WIN_SCORE || cScore >= WIN_SCORE) return finish(pScore >= WIN_SCORE);
+    setTimeout(function(){ if (running) serve(!toPlayer); }, 900);
+  }
+
+  function step(){
+    if (windTimer-- <= 0){
+      windTarget = (Math.random() * 2 - 1) * 0.055;
+      windTimer = 180 + Math.random() * 220;
+    }
+    wind += (windTarget - wind) * 0.02;
+
+    // ---- you
+    var mvL = keys.left || pad.left, mvR = keys.right || pad.right;
+    if (mvL) { P.x -= SPEED; P.face = -1; }
+    if (mvR) { P.x += SPEED; P.face = 1; }
+    if ((keys.up || pad.up) && P.y >= GROUND) P.vy = JUMP;
+    P.vy += GRAV; P.y += P.vy;
+    if (P.y > GROUND){ P.y = GROUND; P.vy = 0; }
+    P.x = Math.max(P.r, Math.min(NET_X - NET_W - P.r, P.x));
+
+    // ---- gramps. he has a system.
+    if (bird && bird.live){
+      var t = 0, bx = bird.x, bvx = bird.vx, by = bird.y, bvy = bird.vy, land = bird.x;
+      for (t = 0; t < 200; t++){
+        bvx = (bvx + wind) * 0.988; bvy = (bvy + GRAV) * 0.968;
+        bx += bvx; by += bvy;
+        if (by >= GROUND - 4){ land = bx; break; }
+      }
+      if (C.errT-- <= 0){ C.err = (Math.random() * 2 - 1) * 13; C.errT = 24 + Math.random() * 30; }
+      var want = (land > NET_X + 6) ? land - 6 + C.err : NET_X + 40;
+      var dx = want - C.x;
+      var cpu = 1.55 + Math.min(pScore, 6) * 0.13;     // he warms up when he's losing
+      if (Math.abs(dx) > 3) C.x += Math.sign(dx) * Math.min(cpu, Math.abs(dx));
+      if (C.y >= GROUND && bird.x > NET_X - 30 && bird.y < 120 && Math.abs(bird.x - C.x) < 30 && Math.random() < 0.16) C.vy = JUMP;
+    }
+    C.vy += GRAV; C.y += C.vy;
+    if (C.y > GROUND){ C.y = GROUND; C.vy = 0; }
+    C.x = Math.max(NET_X + NET_W + C.r, Math.min(W - C.r, C.x));
+
+    if (!bird || !bird.live) return;
+
+    // ---- the birdie: light, draggy, and a coward in a crosswind
+    bird.vx = (bird.vx + wind) * 0.988;
+    bird.vy = (bird.vy + GRAV) * 0.968;
+    bird.x += bird.vx;
+    bird.y += bird.vy;
+    bird.spin += 0.4;
+
+    if (bird.x < 3){ bird.x = 3; bird.vx = Math.abs(bird.vx) * 0.6; }
+    if (bird.x > W - 3){ bird.x = W - 3; bird.vx = -Math.abs(bird.vx) * 0.6; }
+    if (bird.y < 4){ bird.y = 4; bird.vy = Math.abs(bird.vy) * 0.5; }
+
+    hitPlayer(P, 1) || hitPlayer(C, -1);
+
+    // net (the clothesline)
+    if (bird.x > NET_X - NET_W - 3 && bird.x < NET_X + NET_W + 3 && bird.y > NET_TOP){
+      bird.x = bird.vx > 0 ? NET_X - NET_W - 3 : NET_X + NET_W + 3;
+      bird.vx *= -0.35;
+      plink(220, 'triangle', .08);
+    }
+
+    // landed
+    if (bird.y >= GROUND - 2){
+      bird.y = GROUND - 2;
+      point(bird.x > NET_X);
+    }
+  }
+
+  // ================= DRAW =================
+  function rect(x,y,w,h,c){ ctx.fillStyle = c; ctx.fillRect(x|0, y|0, w|0, h|0); }
+
+  var cloudX = 40;
+  function draw(){
+    // sky over Nantucket Sound
+    var sky = ctx.createLinearGradient(0,0,0,GROUND);
+    sky.addColorStop(0,'#4FC3E8'); sky.addColorStop(1,'#BDEBF7');
+    ctx.fillStyle = sky; ctx.fillRect(0,0,W,GROUND);
+
+    // sun
+    rect(272,16,16,16,'#FFD700'); rect(268,20,24,8,'#FFD700'); rect(276,12,8,24,'#FFD700');
+
+    // clouds (chunky, 8-bit, non-negotiable)
+    cloudX -= 0.08; if (cloudX < -60) cloudX = W + 20;
+    rect(cloudX,26,34,7,'#FFFFFF'); rect(cloudX+7,20,20,7,'#FFFFFF');
+    rect(cloudX+120,40,26,6,'#FFFFFF'); rect(cloudX+126,35,14,6,'#FFFFFF');
+
+    // the water, way out there
+    rect(0,120,W,14,'#2E86AB');
+    for (var i=0;i<W;i+=8){ rect(i + ((Date.now()/220|0)%8), 126, 4, 2, '#7FD4E8'); }
+    rect(0,132,W,4,'#1B5E7A');
+
+    // dune grass line
+    for (var g=0; g<W; g+=4){ rect(g, 136 - (g%8===0?3:1), 2, 6, '#6B8F3A'); }
+
+    // the lawn
+    rect(0,136,W,H-136,'#7CB342');
+    rect(0,136,W,3,'#8FCC4E');
+    for (var s=0;s<W;s+=6){ rect(s, 150 + ((s*7)%20), 2, 2, '#689F38'); }
+
+    // sand baseline scratches
+    rect(0,GROUND+8,W,H-GROUND-8,'#C6A65B');
+    rect(0,GROUND+8,W,2,'#E0C67F');
+
+    // net posts + clothesline
+    rect(NET_X-1, NET_TOP, NET_W, GROUND-NET_TOP, '#EFEFEF');
+    for (var n=NET_TOP; n<GROUND; n+=6) rect(NET_X-1, n, NET_W, 3, '#9E9E9E');
+    rect(NET_X-3, NET_TOP-3, 7, 3, '#8D6E63');
+
+    drawGuy(P, '#FF1493', '#FFD700', 'YOU');
+    drawGuy(C, '#8A2BE2', '#32CD32', 'GRAMPS');
+
+    if (bird && bird.live) drawBird();
+
+    // wind gauge
+    var w8 = Math.round(wind * 90);
+    rect(4,4,86,13,'rgba(0,0,0,.55)');
+    ctx.fillStyle = '#32CD32';
+    ctx.font = '8px "Courier New", monospace';
+    var arrows = w8 === 0 ? '--' : (w8 > 0 ? '>>>>>>'.slice(0, Math.min(6, Math.abs(w8))) : '<<<<<<'.slice(0, Math.min(6, Math.abs(w8))));
+    ctx.fillText('WIND ' + arrows, 8, 14);
+
+    if (rallyHits >= 6 && bird && bird.live){
+      ctx.fillStyle = '#FF1493';
+      ctx.font = 'bold 9px "Courier New", monospace';
+      ctx.fillText('RALLY x' + rallyHits, W/2 - 26, 14);
+    }
+
+    if (msgT > 0){
+      msgT--;
+      ctx.fillStyle = 'rgba(0,0,0,.65)';
+      ctx.fillRect(W/2 - 62, 70, 124, 22);
+      ctx.fillStyle = msg.indexOf('YOUR') === 0 ? '#FFD700' : '#FF3B30';
+      ctx.font = 'bold 12px "Courier New", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(msg, W/2, 85);
+      ctx.textAlign = 'left';
+    }
+  }
+
+  function drawGuy(pl, shirt, hat, label){
+    var x = Math.round(pl.x), y = Math.round(pl.y);
+    var air = pl.y < GROUND - 1;
+    // shadow
+    ctx.fillStyle = 'rgba(0,0,0,.20)';
+    ctx.fillRect(x-8, GROUND-2, 16, 3);
+    // legs
+    rect(x-5, y-9, 3, 9, '#2E3A59');
+    rect(x+2, y-9, 3, 9, '#2E3A59');
+    // body
+    rect(x-6, y-19, 12, 11, shirt);
+    rect(x-6, y-19, 12, 2, '#FFFFFF');
+    // head
+    rect(x-4, y-27, 8, 8, '#F0C39B');
+    rect(x-5, y-29, 10, 3, hat);   // visor. everyone has one.
+    rect(x+3, y-29, 4, 2, hat);
+    // eyes
+    rect(x-2, y-24, 2, 2, '#000');
+    rect(x+1, y-24, 2, 2, '#000');
+    // racket arm
+    var ax = pl.face > 0 ? x + 6 : x - 9;
+    var ay = air ? y - 30 : y - 22;
+    rect(pl.face > 0 ? x+5 : x-6, y-18, 3, 4, '#F0C39B');
+    rect(ax, ay, 3, 8, '#8D6E63');
+    rect(ax-2, ay-7, 7, 8, '#E0E0E0');
+    rect(ax-1, ay-6, 5, 6, '#FFFFFF');
+    ctx.fillStyle = '#000';
+    ctx.font = '6px "Courier New", monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, x, y + 9);
+    ctx.textAlign = 'left';
+  }
+
+  function drawBird(){
+    var x = Math.round(bird.x), y = Math.round(bird.y);
+    // cork
+    rect(x-2, y-2, 4, 4, '#E8E8E8');
+    rect(x-1, y-1, 2, 2, '#BDBDBD');
+    // feather skirt, flipped to trail behind it
+    var up = bird.vy < 0 ? -1 : 1;
+    rect(x-3, y + up*3, 6, 2, '#FFFFFF');
+    rect(x-4, y + up*5, 8, 2, '#F0F0F0');
+    rect(x-3, y + up*7, 6, 1, '#D8D8D8');
+  }
+
+  // ================= LOOP =================
+  function frame(){
+    if (!running) return;
+    if (freeze > 0) freeze--; else step();
+    draw();
+    raf = requestAnimationFrame(frame);
+  }
+
+  function finish(won){
+    running = false;
+    cancelAnimationFrame(raf);
+    if (won){
+      var wins = +(localStorage.getItem(BEST_KEY) || 0) + 1;
+      localStorage.setItem(BEST_KEY, wins);
+      bestEl.textContent = wins;
+      plink(660,'square',.15); setTimeout(function(){plink(880,'square',.15);},140); setTimeout(function(){plink(1320,'square',.3);},280);
+    } else {
+      plink(200,'sawtooth',.3); setTimeout(function(){plink(120,'sawtooth',.5);},220);
+    }
+    overlay.innerHTML =
+      '<div class="gameover-art">' + (won ? '🏸🏆' : '🏸😤') + '</div>' +
+      '<h2 class="wordart" style="font-size:24px">' + (won ? 'YOU BEAT GRAMPS' : 'GRAMPS TAKES IT') + '</h2>' +
+      '<p style="margin:0">Final: <b>' + pScore + ' – ' + cScore + '</b></p>' +
+      '<p class="fine" style="margin:0">' +
+        (won ? 'He says the wind was in his eyes. He says that every year.'
+             : 'He is already telling everyone at the picnic table about it.') + '</p>' +
+      '<button class="btn95" id="startbtn" style="font-size:20px">🔁 REMATCH</button>';
+    overlay.classList.remove('hidden');
+    document.getElementById('startbtn').addEventListener('click', start);
+  }
+
+  function start(){
+    overlay.classList.add('hidden');
+    reset();
+    running = true;
+    raf = requestAnimationFrame(frame);
+  }
+  document.getElementById('startbtn').addEventListener('click', start);
+
+  // ---- input
+  window.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowLeft' || e.key === 'a'){ keys.left = true; }
+    if (e.key === 'ArrowRight' || e.key === 'd'){ keys.right = true; }
+    if (e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w'){ keys.up = true; e.preventDefault(); }
+  });
+  window.addEventListener('keyup', function(e){
+    if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
+    if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
+    if (e.key === 'ArrowUp' || e.key === ' ' || e.key === 'w') keys.up = false;
+  });
+  function bindPad(id, k){
+    var btn = document.getElementById(id);
+    ['pointerdown','touchstart'].forEach(function(ev){
+      btn.addEventListener(ev, function(e){ e.preventDefault(); pad[k] = true; }, {passive:false});
+    });
+    ['pointerup','pointercancel','touchend','mouseleave','pointerleave'].forEach(function(ev){
+      btn.addEventListener(ev, function(){ pad[k] = false; });
+    });
+  }
+  bindPad('leftbtn','left'); bindPad('rightbtn','right'); bindPad('jumpbtn','up');
+
+  // paint one idle frame behind the overlay
+  serve(true);
+  draw();
+})();
+</script>
+</body>
+</html>
