@@ -102,6 +102,32 @@ nav.jump .btn95{flex:0 0 auto}
 footer{text-align:center;padding:16px 0 40px}
 .badge{display:inline-block;margin:6px}
 
+/* Weather Station 2000 */
+#wx .card{padding:12px}
+.wx-title{text-align:center;margin:0 0 6px}
+.wx-title h2{color:var(--sea);text-shadow:2px 2px 0 var(--sun);font-size:18px;margin:0}
+.wx-panel{border:3px inset #808080;background:#E8F8F8;padding:6px;margin-bottom:8px}
+.wx-now{display:flex;flex-wrap:wrap;align-items:center;gap:8px;justify-content:center;text-align:center}
+.wx-bigicon{font-size:32px;line-height:1;animation:wxbob 2.5s ease-in-out infinite}
+@keyframes wxbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.wx-bigtemp{font-family:"Courier New",monospace;font-size:26px;font-weight:bold;color:var(--sea);text-shadow:2px 2px 0 #fff}
+.wx-stats{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:6px}
+.wx-stat{border:2px outset #fff;background:var(--btnface);padding:2px 6px;font-size:11px;font-family:Verdana,sans-serif;white-space:nowrap}
+.wx-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
+@media (max-width:700px){.wx-grid{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:480px){.wx-grid{grid-template-columns:repeat(2,1fr)}}
+.wx-day{border:2px outset #fff;background:var(--sand);text-align:center;padding:4px 2px;font-size:11px}
+.wx-day .d-name{font-weight:bold;background:var(--sea);color:#fff;margin:-4px -2px 3px;padding:1px 0;font-size:10px;letter-spacing:0}
+.wx-day .d-icon{font-size:18px;line-height:1.2}
+.wx-day .d-hi{color:var(--red);font-weight:bold}
+.wx-day .d-lo{color:var(--linkblue)}
+.wx-day .d-rain{color:var(--sea);font-size:10px}
+.wx-day.d-unknown .d-icon{color:var(--purple);font-weight:bold}
+.wx-err{text-align:center;font-family:"Courier New",monospace;background:#000;color:var(--red);border:2px inset #808080;padding:10px;font-weight:bold}
+.wx-src{text-align:center;font-size:11px;color:#444;margin:8px 0 0}
+.wx-indices{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px}
+.wx-idx{font-family:"Courier New",monospace;font-weight:bold;letter-spacing:1px}
+
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 body.paused *{animation-play-state:paused!important}
 </style>
@@ -115,6 +141,55 @@ body.paused *{animation-play-state:paused!important}
   <div class="card">
     <h1><span class="star" aria-hidden="true">⭐</span> <span class="wordart">🦞 Welcome to our Cape Cod Homepage!!! 🦞</span> <span class="star" aria-hidden="true">⭐</span></h1>
     <p><b>Chatham, MA · July 25 – Aug 1 · The Short Family World Wide Web Site</b></p>
+    <section id="wx" aria-label="Chatham weather station" style="margin:10px 0">
+    <div class="wx-title">
+      <h2>🛰️ CHATHAM WEATHER STATION 2000 🌡️</h2>
+      <p class="fine" style="margin:0"><span class="blink">●</span> LIVE VIA SATELLITE UPLINK <span class="blink">●</span></p>
+    </div>
+
+    <div class="wx-panel" id="wx-today">
+      <p class="lcd" style="font-size:13px;letter-spacing:1px;margin:0 0 8px">CONNECTING TO SATELLITE<span class="blink">...</span></p>
+    </div>
+
+    <div class="wx-panel">
+      <p style="text-align:center;font-weight:bold;margin:0 0 5px;font-size:13px;font-family:'Comic Sans MS','Comic Sans',cursive;color:var(--hotpink)">🏖️ THE BIG WEEK: JULY 25 – AUG 1 🏖️</p>
+      <div class="wx-grid" id="wx-trip">
+        <div class="wx-err" style="grid-column:1/-1">LOADING FORECAST.EXE<span class="blink">...</span></div>
+      </div>
+    </div>
+
+    <div class="wx-indices" aria-hidden="true">
+      <span class="wx-stat">💨 <b>FART INDEX:</b> <span class="wx-idx" id="wx-fart"></span></span>
+      <span class="wx-stat">💩 <b>CRAP INDEX:</b> <span class="wx-idx" id="wx-crap"></span></span>
+    </div>
+    <script>
+    (function(){
+      function pick(a){return a[Math.floor(Math.random()*a.length)]}
+      var LVL={High:'#FF8C00',Critical:'#FF0000',Medium:'#008000'};
+      function setIdx(id,levels){
+        var v=pick(levels),el=document.getElementById(id);
+        el.textContent=v.toUpperCase();
+        el.style.color=LVL[v];
+        if(v==='Critical')el.className+=' blink';
+      }
+      setIdx('wx-fart',['High','Critical']);
+      setIdx('wx-crap',['Medium','High','Critical']);
+    })();
+    </script>
+
+    <!-- ═══════════ WEATHER BULLETIN TICKER ═══════════
+         Dad: paste your official joke weather bulletins below, one per <span>.
+         They'll scroll in the marquee. Example:
+         <span>⚠️ ADVISORY: 100% chance of sand in the car ⚠️</span>
+    -->
+    <div class="marquee" style="border:2px inset #808080;background:var(--sun)" aria-hidden="true">
+      <span id="wx-bulletin">📢 WEATHER BULLETIN BOARD 📢 ... awaiting official bulletins from the webmaster ... 📢</span>
+    </div>
+    <!-- ═══════════ END WEATHER BULLETIN TICKER ═══════════ -->
+
+    <p class="wx-src">data: open-meteo.com + tidesandcurrents.noaa.gov (station 8447435, Chatham Lydia Cove)</p>
+    </section>
+
     <p>You are visitor #<span class="lcd" id="counter">000423</span></p>
     <div class="uc" aria-hidden="true"><div class="uc-inner">👷 <span class="blink">UNDER CONSTRUCTION</span> 👷</div></div>
     <p style="margin-top:16px"><a class="playgame" href="game.html">🦈 PLAY THE GAME!! 🏊</a></p>
@@ -480,6 +555,119 @@ document.querySelectorAll('.chk input').forEach(function(cb){
     localStorage.setItem(key, cb.checked ? '1' : '0');
   });
 });
+
+// ☁️ CHATHAM WEATHER STATION 2000 — real data only, no fibs.
+(function(){
+  var LAT = 41.6821, LON = -69.9597;
+  var TRIP_START = '2026-07-25', TRIP_END = '2026-08-01';
+  var WX_URL = 'https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON +
+    '&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m' +
+    '&daily=weather_code,temperature_2m_max,temperature_2m_min,uv_index_max,sunrise,sunset,precipitation_probability_max' +
+    '&temperature_unit=fahrenheit&wind_speed_unit=mph&timezone=America%2FNew_York&forecast_days=16';
+  var SEA_URL = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON +
+    '&daily=sea_surface_temperature_max&temperature_unit=fahrenheit&timezone=America%2FNew_York&forecast_days=1';
+
+  function icon(code){
+    if (code === 0) return '☀️';
+    if (code <= 2) return '⛅';
+    if (code === 3) return '☁️';
+    if (code === 45 || code === 48) return '🌫️';
+    if (code >= 51 && code <= 57) return '🌦️';
+    if (code >= 61 && code <= 67) return '🌧️';
+    if (code >= 71 && code <= 77) return '🌨️';
+    if (code >= 80 && code <= 82) return '🌧️';
+    if (code >= 85 && code <= 86) return '🌨️';
+    if (code >= 95) return '⛈️';
+    return '🌡️';
+  }
+  function compass(deg){
+    return ['N','NE','E','SE','S','SW','W','NW'][Math.round(deg / 45) % 8];
+  }
+  function clock(iso){ // "2026-07-14 12:32" or "2026-07-14T12:32" -> "12:32pm"
+    var hm = iso.replace('T',' ').split(' ')[1].split(':');
+    var h = +hm[0], ap = h >= 12 ? 'pm' : 'am';
+    h = h % 12 || 12;
+    return h + ':' + hm[1] + ap;
+  }
+  function stat(label, val){
+    return '<span class="wx-stat"><b>' + label + '</b> ' + val + '</span>';
+  }
+  function err(el, what){
+    el.innerHTML = '<div class="wx-err">📡 <span class="blink">SATELLITE LINK LOST</span> 📡<br><span style="color:#32CD32;font-size:12px">' + what + ' unavailable — refusing to make up numbers. try reloading!</span></div>';
+  }
+  function localDate(d){ // YYYY-MM-DD in browser-local time
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  var todayEl = document.getElementById('wx-today');
+  var tripEl = document.getElementById('wx-trip');
+
+  // TODAY panel: current conditions + today's beach numbers + tides
+  fetch(WX_URL).then(function(r){ if(!r.ok) throw 0; return r.json(); }).then(function(wx){
+    var c = wx.current, d = wx.daily;
+    var ti = d.time.indexOf(localDate(new Date()));
+    if (ti < 0) ti = 0;
+    var html =
+      '<p class="lcd" style="font-size:13px;letter-spacing:1px;margin:0 0 8px">*** TODAY IN CHATHAM, MASS. ***</p>' +
+      '<div class="wx-now">' +
+        '<span class="wx-bigicon" aria-hidden="true">' + icon(c.weather_code) + '</span>' +
+        '<span class="wx-bigtemp">' + Math.round(c.temperature_2m) + '°F</span>' +
+      '</div>' +
+      '<div class="wx-stats" id="wx-stats">' +
+        stat('🌬️ wind', Math.round(c.wind_speed_10m) + ' mph ' + compass(c.wind_direction_10m)) +
+        stat('🔥 hi', Math.round(d.temperature_2m_max[ti]) + '°') +
+        stat('🧊 lo', Math.round(d.temperature_2m_min[ti]) + '°') +
+        stat('🧴 UV', d.uv_index_max[ti] == null ? '?' : Math.round(d.uv_index_max[ti])) +
+        stat('🌅 sun', clock(d.sunrise[ti]) + '–' + clock(d.sunset[ti])) +
+      '</div>';
+    todayEl.innerHTML = html;
+
+    // water temp (nice-to-have; silently skipped if the buoy is sulking)
+    fetch(SEA_URL).then(function(r){ return r.json(); }).then(function(sea){
+      var t = sea.daily && sea.daily.sea_surface_temperature_max[0];
+      if (t != null) document.getElementById('wx-stats').insertAdjacentHTML('beforeend',
+        stat('🌊 water', Math.round(t) + '°F'));
+    }).catch(function(){});
+
+    // tides for today — NOAA station 8447435 Chatham Lydia Cove
+    var ymd = localDate(new Date()).replace(/-/g,'');
+    var TIDE_URL = 'https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=8447435&product=predictions&datum=MLLW&time_zone=lst_ldt&units=english&interval=hilo&format=json&begin_date=' + ymd + '&end_date=' + ymd;
+    fetch(TIDE_URL).then(function(r){ return r.json(); }).then(function(td){
+      if (!td.predictions || !td.predictions.length) throw 0;
+      var s = td.predictions.map(function(p){
+        return (p.type === 'H' ? '⬆️HI ' : '⬇️LO ') + clock(p.t);
+      }).join(' · ');
+      todayEl.insertAdjacentHTML('beforeend',
+        '<p style="text-align:center;margin:8px 0 0;font-size:13px"><b>🦀 TIDES:</b> ' + s + '</p>');
+    }).catch(function(){
+      todayEl.insertAdjacentHTML('beforeend',
+        '<p class="wx-err" style="margin:8px 0 0;font-size:12px">🦀 TIDE-O-METER OFFLINE (NOAA buoy not answering)</p>');
+    });
+
+    // TRIP grid: Jul 25 – Aug 1, real data where the 16-day horizon reaches
+    var cells = '', day = new Date(TRIP_START + 'T12:00:00'), end = new Date(TRIP_END + 'T12:00:00');
+    var names = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+    while (day <= end) {
+      var key = localDate(day), i = d.time.indexOf(key);
+      var label = names[day.getDay()] + ' ' + (day.getMonth()+1) + '/' + day.getDate();
+      if (i >= 0 && d.temperature_2m_max[i] != null) {
+        cells += '<div class="wx-day"><div class="d-name">' + label + '</div>' +
+          '<div class="d-icon" aria-hidden="true">' + icon(d.weather_code[i]) + '</div>' +
+          '<span class="d-hi">' + Math.round(d.temperature_2m_max[i]) + '°</span>/<span class="d-lo">' + Math.round(d.temperature_2m_min[i]) + '°</span>' +
+          '<div class="d-rain">💧' + d.precipitation_probability_max[i] + '%</div></div>';
+      } else {
+        cells += '<div class="wx-day d-unknown"><div class="d-name">' + label + '</div>' +
+          '<div class="d-icon">❓</div>' +
+          '<div class="blink" style="font-size:10px;color:var(--purple);font-weight:bold">FORECAST<br>COMING SOON</div></div>';
+      }
+      day.setDate(day.getDate() + 1);
+    }
+    tripEl.innerHTML = cells;
+  }).catch(function(){
+    err(todayEl, 'weather satellite');
+    tripEl.innerHTML = '<div class="wx-err" style="grid-column:1/-1">📡 <span class="blink">SATELLITE LINK LOST</span> 📡<br><span style="color:#32CD32;font-size:12px">no forecast beamed down — we don\'t do fake weather here</span></div>';
+  });
+})();
 
 // Real MIDI jukebox: Drunken-Sailor.mid, transcribed to [note, duration s, gap s].
 // Loops forever. Autoplays on first tap/click (browsers won't allow sooner).
