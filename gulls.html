@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>💩 GULL PATROL — Cape Cod Homepage</title>
+<meta name="theme-color" content="#008080">
+<style>
+:root{--sand:#FFF8E1;--ink:#1A1A2E;--sea:#008080;--hotpink:#FF1493;--lime:#32CD32;--sun:#FFD700;--purple:#8A2BE2;--red:#FF3B30;--btnface:#C0C0C0}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:16px/1.5 Verdana,Geneva,Tahoma,sans-serif;background:#B2E5E5;touch-action:manipulation}
+.wrap{max-width:640px;margin:0 auto;padding:8px 12px 40px}
+h1,h2{font-family:"Comic Sans MS","Comic Sans","Chalkboard SE",cursive;margin:8px 0}
+h1{font-size:clamp(22px,6.5vw,34px);text-align:center}
+.wordart{background:linear-gradient(90deg,#FF1493,#FFD700,#32CD32,#008080,#8A2BE2);-webkit-background-clip:text;background-clip:text;color:var(--hotpink);filter:drop-shadow(2px 2px 0 #000)}
+@supports (background-clip:text) or (-webkit-background-clip:text){.wordart{color:transparent}}
+.card{background:var(--sand);border:3px ridge var(--sea);box-shadow:4px 4px 0 rgba(0,0,0,.35);padding:12px;margin:0 0 12px}
+.btn95{background:var(--btnface);border:3px outset #fff;color:#000;font:bold 16px Verdana,sans-serif;min-height:44px;min-width:44px;padding:10px 16px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.btn95:active{border-style:inset;transform:translate(1px,1px)}
+.lcd{font-family:"Courier New",monospace;background:#000;color:#32CD32;letter-spacing:2px;padding:4px 8px;border:2px inset #808080;display:inline-block}
+.blink{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.fine{font-size:13px;color:#444}
+.hud{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:0 0 8px}
+#stage{position:relative;width:100%;height:min(62vh,480px);border:4px ridge var(--sea);overflow:hidden;background:linear-gradient(#87CEEB 0 55%, #7FD4E8 55% 68%, #F5DEB3 68% 100%);box-shadow:4px 4px 0 rgba(0,0,0,.35);cursor:none;user-select:none;-webkit-user-select:none}
+#stage::before{content:"";position:absolute;left:0;right:0;top:55%;height:13%;background:repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 20px,transparent 20px 44px)}
+.sprite{position:absolute;line-height:1;pointer-events:none;will-change:transform}
+#you{font-size:40px;transform-origin:50% 100%}
+.gull{font-size:32px}
+.gull.flip{transform:scaleX(-1)}
+.poop{font-size:20px;filter:drop-shadow(1px 2px 1px rgba(0,0,0,.25))}
+.splat{font-size:26px;opacity:.85}
+.umbrella{font-size:34px}
+#overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(178,229,229,.88);text-align:center;padding:16px;z-index:10}
+#overlay h2{margin:0}
+#overlay.hidden{display:none}
+.controls{display:flex;gap:8px;justify-content:center;margin-top:8px}
+.padbtn{flex:1;max-width:200px;font-size:26px;min-height:56px}
+.gameover-art{font-size:52px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1><span class="wordart">💩 GULL PATROL 💩</span></h1>
+<p style="text-align:center;margin:0 0 8px"><span class="lcd" style="font-size:12px">DO NOT LET THEM WIN</span></p>
+
+<div class="hud">
+  <span class="lcd">⏱ <span id="score">0</span></span>
+  <span class="lcd">👕 CLEAN SHIRTS: <span id="lives">3</span></span>
+  <span class="lcd">🏆 BEST: <span id="best">0</span></span>
+</div>
+
+<div id="stage" aria-label="Gull Patrol game area">
+  <div id="overlay">
+    <h2 class="wordart" style="font-size:26px">☀️ A PERFECT BEACH DAY ☀️</h2>
+    <p style="max-width:420px;margin:0">You are relaxing on Hardings Beach. The gulls have OTHER PLANS. Slide left/right (drag, tilt buttons, or arrow keys) and DODGE THE PAYLOAD. Grab the ☂️ for 5 seconds of legendary protection.</p>
+    <p class="fine blink" style="margin:0">3 direct hits and it's back to the outdoor shower</p>
+    <button class="btn95" id="startbtn" style="font-size:20px">🏖️ HIT THE BEACH</button>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn95 padbtn" id="leftbtn" aria-label="move left">◀️</button>
+  <button class="btn95 padbtn" id="rightbtn" aria-label="move right">▶️</button>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <p class="fine" style="margin:0">☝️ SCIENCE CORNER: a herring gull can spot an unattended fried clam from 200 yards. You never had a chance. High score is saved on this phone — settle it at dinner.</p>
+</div>
+
+<div class="card" style="text-align:center">
+  <p style="margin:0 0 8px;font-weight:bold">🕹️ MORE FROM THE ARCADE 🕹️</p>
+  <div class="hud" style="margin:0">
+    <a class="btn95" href="game.html">🦈 SHARK DODGE</a>
+    <a class="btn95" href="tidepool.html">🦀 TIDE POOL ZEN</a>
+  </div>
+</div>
+
+<p style="text-align:center"><a class="btn95" href="index.html">🏠 BACK TO HOMEPAGE</a></p>
+</div>
+
+<script>
+(function(){
+  var stage = document.getElementById('stage');
+  var overlay = document.getElementById('overlay');
+  var scoreEl = document.getElementById('score');
+  var livesEl = document.getElementById('lives');
+  var bestEl = document.getElementById('best');
+  var BEST_KEY = 'cape-gull-best';
+  bestEl.textContent = localStorage.getItem(BEST_KEY) || 0;
+
+  var W, H, you, youX, youW = 40;
+  var gulls = [], poops = [], splats = [], umbrella = null;
+  var lives, score, t0, running = false, raf = null, lastSpawn = 0, lastUmb = 0;
+  var keys = {left:false, right:false}, padDir = 0, targetX = null;
+  var shielded = 0; // timestamp until which umbrella protects
+
+  function px(el, x, y){ el.style.transform = 'translate(' + x + 'px,' + y + 'px)' + (el._extra || ''); }
+  function mk(cls, txt){
+    var d = document.createElement('div');
+    d.className = 'sprite ' + cls; d.textContent = txt;
+    stage.appendChild(d); return d;
+  }
+  function size(){ W = stage.clientWidth; H = stage.clientHeight; }
+  window.addEventListener('resize', size);
+
+  function reset(){
+    gulls.forEach(function(g){ g.el.remove(); });
+    poops.forEach(function(p){ p.el.remove(); });
+    splats.forEach(function(s){ s.remove(); });
+    if (umbrella) umbrella.el.remove();
+    if (you) you.remove();
+    gulls = []; poops = []; splats = []; umbrella = null;
+    size();
+    you = mk('', '🧍'); you.id = 'you';
+    youX = W/2 - youW/2;
+    lives = 3; score = 0; shielded = 0; targetX = null;
+    livesEl.textContent = lives; scoreEl.textContent = 0;
+  }
+
+  function spawnGull(now){
+    var fromLeft = Math.random() < .5;
+    var g = { el: mk('gull', '🐦'), x: fromLeft ? -40 : W + 40,
+      y: 20 + Math.random() * (H * .28),
+      vx: (fromLeft ? 1 : -1) * (60 + Math.random()*70 + score*2),
+      nextDrop: now + 400 + Math.random()*1200 };
+    if (!fromLeft) g.el.classList.add('flip');
+    gulls.push(g);
+  }
+  function spawnUmbrella(){
+    if (umbrella) return;
+    umbrella = { el: mk('umbrella','☂️'), x: 20 + Math.random()*(W-60), y: H - 46 };
+    px(umbrella.el, umbrella.x, umbrella.y);
+  }
+
+  function loop(now){
+    if (!running) return;
+    var dt = Math.min((now - (loop.prev || now)) / 1000, .05);
+    loop.prev = now;
+    score = Math.floor((now - t0) / 1000);
+    scoreEl.textContent = score;
+
+    // difficulty ramp: spawn interval shrinks
+    var interval = Math.max(320, 1400 - score * 28);
+    if (now - lastSpawn > interval) { spawnGull(now); lastSpawn = now; }
+    if (now - lastUmb > 14000) { spawnUmbrella(); lastUmb = now; }
+
+    // move you
+    var speed = 320;
+    if (keys.left || padDir < 0) youX -= speed * dt;
+    if (keys.right || padDir > 0) youX += speed * dt;
+    if (targetX !== null) {
+      var d = targetX - (youX + youW/2);
+      if (Math.abs(d) > 4) youX += Math.sign(d) * Math.min(Math.abs(d), speed * 1.4 * dt);
+    }
+    youX = Math.max(0, Math.min(W - youW, youX));
+    var protectedNow = now < shielded;
+    you.textContent = protectedNow ? '⛱️' : '🧍';
+    px(you, youX, H - 52);
+
+    // gulls fly + drop
+    for (var i = gulls.length - 1; i >= 0; i--){
+      var g = gulls[i];
+      g.x += g.vx * dt;
+      g.y += Math.sin(now/300 + i) * 12 * dt;
+      px(g.el, g.x, g.y);
+      if (now > g.nextDrop && g.x > 0 && g.x < W){
+        // gulls LEAD their target. they are professionals.
+        var aim = Math.random() < .55;
+        var p = { el: mk('poop','💩'), x: g.x + 8, y: g.y + 24, vy: 130 + score*4,
+          vx: aim ? ((youX + youW/2) - (g.x + 8)) / Math.max(.8, (H - g.y)/160) * .35 : (Math.random()*40 - 20) };
+        poops.push(p);
+        g.nextDrop = now + 700 + Math.random()*1600;
+      }
+      if (g.x < -60 || g.x > W + 60){ g.el.remove(); gulls.splice(i,1); }
+    }
+
+    // poop falls
+    for (var j = poops.length - 1; j >= 0; j--){
+      var p = poops[j];
+      p.vy += 240 * dt;
+      p.y += p.vy * dt; p.x += p.vx * dt;
+      px(p.el, p.x, p.y);
+      var hitY = H - 52;
+      if (p.y >= hitY - 6){
+        // landed — did it land on YOU?
+        var cx = youX + youW/2;
+        if (Math.abs((p.x + 10) - cx) < youW * .55 && p.y < H - 20){
+          if (now < shielded){
+            // bounces off umbrella
+            plink(660);
+          } else {
+            lives--; livesEl.textContent = lives;
+            plink(120);
+            you._extra = ''; flashSplatOnYou();
+            if (lives <= 0){ p.el.remove(); poops.splice(j,1); return gameOver(); }
+          }
+        } else {
+          var s = mk('splat','💥'); px(s, p.x - 4, H - 40); splats.push(s);
+          if (splats.length > 12){ splats.shift().remove(); }
+        }
+        p.el.remove(); poops.splice(j,1);
+        continue;
+      }
+    }
+
+    // umbrella pickup
+    if (umbrella && Math.abs((umbrella.x + 17) - (youX + youW/2)) < 34){
+      shielded = now + 5000;
+      plink(880); plink(1174);
+      umbrella.el.remove(); umbrella = null;
+    }
+
+    raf = requestAnimationFrame(loop);
+  }
+
+  function flashSplatOnYou(){
+    var s = mk('splat','💩');
+    px(s, youX + 4, H - 78);
+    setTimeout(function(){ s.remove(); }, 700);
+  }
+
+  // tiny retro plink — only ever after user gesture (game started by tap)
+  var actx = null;
+  function plink(f){
+    try{
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'square'; o.frequency.value = f;
+      g.gain.setValueAtTime(.08, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.001, actx.currentTime + .15);
+      o.connect(g); g.connect(actx.destination);
+      o.start(); o.stop(actx.currentTime + .16);
+    }catch(e){}
+  }
+
+  function gameOver(){
+    running = false;
+    cancelAnimationFrame(raf);
+    var best = +(localStorage.getItem(BEST_KEY) || 0);
+    var isBest = score > best;
+    if (isBest) localStorage.setItem(BEST_KEY, score);
+    bestEl.textContent = Math.max(best, score);
+    overlay.innerHTML =
+      '<div class="gameover-art">🧍💩</div>' +
+      '<h2 class="wordart" style="font-size:26px">DIRECT HIT!!</h2>' +
+      '<p style="margin:0">You survived <b>' + score + ' seconds</b> of aerial bombardment.' +
+      (isBest ? '<br><span class="blink" style="color:var(--hotpink);font-weight:bold">☆ NEW FAMILY RECORD ☆</span>' : '') + '</p>' +
+      '<p class="fine" style="margin:0">the gulls remain undefeated since 1997</p>' +
+      '<button class="btn95" id="startbtn" style="font-size:20px">🔁 REMATCH</button>';
+    overlay.classList.remove('hidden');
+    document.getElementById('startbtn').addEventListener('click', start);
+  }
+
+  function start(){
+    overlay.classList.add('hidden');
+    reset();
+    running = true; t0 = performance.now(); lastSpawn = 0; lastUmb = t0; loop.prev = t0;
+    raf = requestAnimationFrame(loop);
+  }
+  document.getElementById('startbtn').addEventListener('click', start);
+
+  // keyboard
+  window.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowLeft'){ keys.left = true; targetX = null; }
+    if (e.key === 'ArrowRight'){ keys.right = true; targetX = null; }
+  });
+  window.addEventListener('keyup', function(e){
+    if (e.key === 'ArrowLeft') keys.left = false;
+    if (e.key === 'ArrowRight') keys.right = false;
+  });
+  // touch buttons
+  function pad(btn, dir){
+    ['pointerdown','touchstart'].forEach(function(ev){
+      btn.addEventListener(ev, function(e){ e.preventDefault(); padDir = dir; targetX = null; }, {passive:false});
+    });
+    ['pointerup','pointercancel','touchend','mouseleave'].forEach(function(ev){
+      btn.addEventListener(ev, function(){ if (padDir === dir) padDir = 0; });
+    });
+  }
+  pad(document.getElementById('leftbtn'), -1);
+  pad(document.getElementById('rightbtn'), 1);
+  // drag on stage
+  function stageX(e){
+    var r = stage.getBoundingClientRect();
+    var cx = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    return Math.max(0, Math.min(W, cx));
+  }
+  stage.addEventListener('pointermove', function(e){ if (running) targetX = stageX(e); });
+  stage.addEventListener('touchmove', function(e){ if (running){ targetX = stageX(e); e.preventDefault(); } }, {passive:false});
+  stage.addEventListener('pointerdown', function(e){ if (running) targetX = stageX(e); });
+})();
+</script>
+</body>
+</html>

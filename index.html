@@ -56,6 +56,7 @@ li{margin:4px 0}
 .playgame{display:inline-block;text-decoration:none;color:#fff!important;font-family:"Comic Sans MS","Comic Sans",cursive;font-weight:bold;font-size:clamp(20px,6vw,28px);padding:14px 26px;border:4px outset var(--sun);background:linear-gradient(90deg,var(--hotpink),var(--purple),var(--sea));text-shadow:2px 2px 0 #000;box-shadow:4px 4px 0 rgba(0,0,0,.4);animation:gamepulse .8s ease-in-out infinite alternate}
 .playgame:active{border-style:inset;transform:translate(2px,2px)}
 @keyframes gamepulse{from{transform:scale(1)}to{transform:scale(1.06)}}
+.playgame.alt{background:linear-gradient(90deg,#0077BE,#32CD32,#FFD700);font-size:clamp(16px,4.5vw,22px);animation-delay:.4s}
 
 /* Sticky nav */
 .jumpwrap{position:sticky;top:0;z-index:50}
@@ -95,6 +96,25 @@ nav.jump .btn95{flex:0 0 auto}
 .crapname{color:var(--red);animation:rainbowhue 3s linear infinite;display:inline-block}
 @keyframes rainbowhue{to{filter:hue-rotate(360deg)}}
 
+/* 🕹️ THE ARCADE */
+#arcade h2{color:var(--purple)}
+#arcade .h2box{border:6px ridge var(--sun);background:var(--sand)}
+.game-card{position:relative;overflow:hidden;text-align:center;padding-top:52px}
+.game-card h3{font-size:22px;color:var(--purple)}
+.game-card p{margin:8px 0}
+.game-card .ribbon{top:12px}
+.game-card .ribbon.classic{background:var(--sun);color:#000;text-shadow:none}
+.game-card .ribbon.new{background:var(--lime);color:#000;animation:blink 1.4s steps(2) infinite}
+body.midnight #arcade h2,body.midnight .game-card h3{color:#C9A0FF}
+
+/* REPORT A FART */
+.fartbtn{display:block;margin:12px auto 4px;background:var(--red);color:#fff;border:6px outset #FF8C00;font-family:"Comic Sans MS","Comic Sans",cursive;font-weight:bold;font-size:clamp(18px,5vw,26px);padding:18px 30px;cursor:pointer;box-shadow:4px 4px 0 rgba(0,0,0,.4);text-shadow:2px 2px 0 #000}
+.fartbtn:active{border-style:inset;transform:translate(2px,2px)}
+.fart-tally{text-align:center;margin:8px 0 4px}
+.fart-msg{text-align:center;min-height:24px;font-weight:bold;color:var(--purple);font-size:14px}
+.fart-float{position:fixed;font-size:30px;pointer-events:none;z-index:999;animation:fartrise 1.8s ease-out forwards}
+@keyframes fartrise{from{opacity:1}to{transform:translateY(-140px) scale(2) rotate(20deg);opacity:0}}
+
 /* Checklist */
 .chk{display:flex;align-items:center;min-height:44px;gap:12px;font-size:16px;cursor:pointer}
 .chk input{appearance:none;-webkit-appearance:none;width:28px;height:28px;min-width:28px;border:3px inset #808080;background:#fff;margin:0;position:relative;cursor:pointer}
@@ -133,7 +153,8 @@ footer{text-align:center;padding:16px 0 40px}
 .wx-err{text-align:center;font-family:"Courier New",monospace;background:#000;color:var(--red);border:2px inset #808080;padding:10px;font-weight:bold}
 .wx-src{text-align:center;font-size:12px;color:#444;margin:8px 0 0}
 .tide-title{text-align:center;font-weight:bold;margin:0 0 4px;font-size:14px;font-family:'Comic Sans MS','Comic Sans',cursive;color:var(--sea)}
-.tide-lcd{display:block;text-align:center;font-size:16px;letter-spacing:1px;padding:8px}
+.tide-lcd{display:block;text-align:center;font-size:14px;letter-spacing:1px;padding:8px;line-height:1.8}
+.tide-lcd b{color:var(--sun)}
 .blink-slow{animation:blink 2s steps(2) infinite}
 
 /* THE WEEK table */
@@ -143,6 +164,37 @@ footer{text-align:center;padding:16px 0 40px}
 .week td .fine{font-size:13px}
 .wx-indices{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:8px}
 .wx-idx{font-family:"Courier New",monospace;font-weight:bold;letter-spacing:1px}
+
+/* ═══════ 🌙 MIDNIGHT MODE — after 9pm, per mom ═══════ */
+body.midnight{
+  color:#E8F0FF;
+  background-color:#0B1D3A;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%230B1D3A'/%3E%3Ccircle cx='10' cy='12' r='1' fill='%23FFF8E1' opacity='.8'/%3E%3Ccircle cx='40' cy='6' r='1.4' fill='%23FFD700' opacity='.7'/%3E%3Ccircle cx='55' cy='30' r='1' fill='%23FFF8E1' opacity='.6'/%3E%3Ccircle cx='22' cy='44' r='1.2' fill='%23FFF8E1' opacity='.7'/%3E%3Ccircle cx='48' cy='54' r='.8' fill='%23FFD700' opacity='.6'/%3E%3Cpath d='M30 26a5 5 0 1 0 4 8 6 6 0 1 1-4-8z' fill='%23FFF8E1' opacity='.25'/%3E%3C/svg%3E")}
+body.midnight .card{background:#12294F;color:#E8F0FF;border-color:#4A6FA5;box-shadow:4px 4px 0 rgba(0,0,0,.7)}
+body.midnight .h2box{background:#12294F;border-color:#4A6FA5}
+body.midnight a{color:#7FDBFF}
+body.midnight .fine{color:#9FB4D4}
+body.midnight h3{color:#7FDBFF}
+body.midnight .marquee{background:#1B3A6B}
+body.midnight .marquee span{color:#FFD700}
+body.midnight nav.jump{background:#081327}
+body.midnight .jump-more{background:linear-gradient(90deg,rgba(8,19,39,0),#081327 70%)}
+body.midnight .btn95{background:#33415C;color:#fff;border-color:#8FA3C7 #232E44 #232E44 #8FA3C7;border-style:outset}
+body.midnight .week th{background:#1B3A6B}
+body.midnight .week th,body.midnight .week td{border-color:#4A6FA5}
+body.midnight .wx-panel{background:#0E2244}
+body.midnight .wx-day{background:#12294F}
+body.midnight .wx-day .d-name{background:#1B3A6B}
+body.midnight .wx-stat{background:#33415C;color:#fff;border-color:#8FA3C7 #232E44 #232E44 #8FA3C7}
+body.midnight .wx-src{color:#9FB4D4}
+body.midnight .wx-bigtemp{color:#7FDBFF;text-shadow:2px 2px 0 #000}
+body.midnight #planning .h2box{background:#12294F}
+body.midnight #house .h2box{background:repeating-linear-gradient(90deg,#2A3B5C 0 8px,#1F2E4A 8px 16px)}
+body.midnight #rainy .h2box{background:#1B3A6B repeating-linear-gradient(100deg,transparent 0 14px,rgba(255,255,255,.15) 14px 16px)}
+body.midnight .gb input[type=text],body.midnight .gb textarea{background:#0E2244;color:#E8F0FF;border-color:#4A6FA5}
+.moonnote{display:none;text-align:center;font-size:13px;color:#FFD700;font-family:'Comic Sans MS','Comic Sans',cursive;margin:4px 0 0}
+body.midnight .moonnote{display:block}
+body.midnight .wx-title h2{color:#7FDBFF;text-shadow:2px 2px 0 #1B3A6B}
 
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
 body.paused *{animation-play-state:paused!important}
@@ -185,23 +237,26 @@ body.paused *{animation-play-state:paused!important}
     <!-- ═══════════ END WEATHER BULLETIN TICKER ═══════════ -->
 
     <div class="wx-panel" id="wx-tides" hidden>
-      <p class="tide-title">🦀 TIDE-O-METER 🦀</p>
+      <p class="tide-title">🦀 TIDE-O-METER 2000 🦀 <span class="fine" style="font-family:Verdana">(now with BOTH sides of Chatham)</span></p>
       <span class="lcd tide-lcd" id="wx-tides-lcd"></span>
+      <p class="fine" style="text-align:center;margin:6px 0 0">🎣 = Fish Pier / harbor side (Lighthouse Beach-ish) · 🏖️ = Stage Harbor = the Nantucket Sound side, i.e. <b>Cockle Cove, Hardings, Ridgevale, Forest Beach</b>. Same ocean, different schedule!!</p>
+      <p class="moonnote">🦉 quiet hours, per mom</p>
     </div>
 
-    <p class="wx-src">data: open-meteo.com + tidesandcurrents.noaa.gov (station 8447435, Chatham Lydia Cove)</p>
+    <p class="wx-src">data: open-meteo.com + tidesandcurrents.noaa.gov (NOAA stations 8447435 Lydia Cove &amp; 8447505 Stage Harbor)</p>
     </section>
 
     <p>You are visitor #<span class="lcd" id="counter">000423</span></p>
     <div class="uc" aria-hidden="true"><div class="uc-inner">👷 <span class="blink">UNDER CONSTRUCTION</span> 👷</div></div>
-    <p style="margin-top:16px"><a class="playgame" href="game.html">🦈 PLAY THE GAME!! 🏊</a></p>
-    <p class="fine blink" style="margin-top:4px">☆ NEW!! ☆ dodge the sharks &amp; blast 'em with harpoons!</p>
+    <p style="margin-top:16px"><a class="playgame" href="#arcade">🕹️ ENTER THE ARCADE!! 🕹️</a></p>
+    <p class="fine blink" style="margin-top:4px">☆ NOW 3 GAMES!! ☆ 🦈 sharks · 💩 seagulls · 🦀 tide pool</p>
   </div>
 </header>
 </div>
 
 <div class="jumpwrap">
 <nav class="jump" id="jumpnav" aria-label="Jump to section">
+  <a class="btn95" href="#arcade">🕹️ ARCADE</a>
   <a class="btn95" href="#planning">📋 Plan</a>
   <a class="btn95" href="#house">🏠 House</a>
   <a class="btn95" href="#beaches">🏖️ Beaches</a>
@@ -211,7 +266,7 @@ body.paused *{animation-play-state:paused!important}
   <a class="btn95" href="#farts">💨 FARTS</a>
   <a class="btn95" href="#bring">🎒 Bring</a>
   <a class="btn95" href="#crew">👨‍👩‍👧 Crew</a>
-  <a class="btn95" href="game.html">🦈 GAME</a>
+  <button class="btn95" id="moonbtn" type="button">🌙 Midnight</button>
   <button class="btn95" id="chill" type="button">⏸ Chill the page</button>
   <button class="btn95" id="midi" type="button">🎵 Drunken-Sailor.mid ▶</button>
 </nav>
@@ -219,6 +274,32 @@ body.paused *{animation-play-state:paused!important}
 </div>
 
 <main class="wrap">
+
+<section id="arcade">
+  <div class="h2box"><h2><span class="blink" aria-hidden="true">🕹️</span> <span class="wordart">THE ARCADE</span> <span class="blink" aria-hidden="true">🕹️</span></h2></div>
+  <p class="fine" style="margin:0 0 12px;text-align:center">3 games. no wifi needed. settle it in the car. 🚗</p>
+
+  <div class="card game-card">
+    <div class="ribbon classic" aria-hidden="true">🏆 CLASSIC 🏆</div>
+    <h3>🦈 SHARK DODGE!!!</h3>
+    <p>The original. Dodge the sharks and blast 'em with harpoons. Warning: the sharks have been getting faster since 1997.</p>
+    <p><a class="playgame" href="game.html">🦈 PLAY 🏊</a></p>
+  </div>
+
+  <div class="card game-card">
+    <div class="ribbon new" aria-hidden="true">☆ NEW!! ☆</div>
+    <h3>💩 GULL PATROL</h3>
+    <p>A perfect beach day on Hardings, ruined from above. Slide left and right, dodge the payload, grab the ☂️. Three direct hits and it's back to the outdoor shower.</p>
+    <p><a class="playgame alt" href="gulls.html">💩 PLAY 🐦</a></p>
+  </div>
+
+  <div class="card game-card">
+    <div class="ribbon new" aria-hidden="true">☆ NEW!! ☆</div>
+    <h3>🦀 TIDE POOL ZEN</h3>
+    <p>No timer. No score to lose. Tap the hermit crabs to befriend them, and every so often a very wise seagull drops by with advice. For the 2-year-old, and for anyone who needs a minute.</p>
+    <p><a class="playgame alt" href="tidepool.html">🦀 PLAY 🐚</a></p>
+  </div>
+</section>
 
 <section id="planning">
   <div class="h2box"><h2>📋 Planning</h2></div>
@@ -545,6 +626,14 @@ body.paused *{animation-play-state:paused!important}
     <h3>Fart rules</h3>
     <ol><li><b>Anytime, all the time</b></li></ol>
   </div>
+  <div class="card">
+    <h3>📠 OFFICIAL FART REPORTING HOTLINE 📠</h3>
+    <p class="fine">Per Rule 1, all farts must be reported to the Bureau. Tap the button. Every report is logged FOREVER (on this phone).</p>
+    <button class="fartbtn" id="fartbtn" type="button">💨 REPORT A FART 💨</button>
+    <p class="fart-tally">VACATION TOTAL: <span class="lcd" id="farttotal">000000</span></p>
+    <p class="fart-msg" id="fartmsg" aria-live="polite"></p>
+    <p class="fine" style="text-align:center;margin:4px 0 0">🏆 end-of-week statistics will be cross-referenced with the FART INDEX</p>
+  </div>
 </section>
 
 <section id="bring">
@@ -601,6 +690,55 @@ document.getElementById('chill').addEventListener('click', function(){
   document.body.classList.toggle('paused');
   this.textContent = document.body.classList.contains('paused') ? '▶ Un-chill' : '⏸ Chill the page';
 });
+
+// 🌙 MIDNIGHT MODE — auto after 9pm / before 6am, manual override saved
+(function(){
+  var btn = document.getElementById('moonbtn');
+  function setLabel(){
+    btn.textContent = document.body.classList.contains('midnight') ? '☀️ Daytime' : '🌙 Midnight';
+  }
+  var pref = localStorage.getItem('cape-midnight'); // '1'=force on, '0'=force off, null=auto
+  var h = new Date().getHours();
+  var auto = (h >= 21 || h < 6);
+  if (pref === '1' || (pref === null && auto)) document.body.classList.add('midnight');
+  setLabel();
+  btn.addEventListener('click', function(){
+    document.body.classList.toggle('midnight');
+    localStorage.setItem('cape-midnight', document.body.classList.contains('midnight') ? '1' : '0');
+    setLabel();
+  });
+})();
+
+// 💨 REPORT A FART — persistent per-device tally, per Rule 1
+(function(){
+  var btn = document.getElementById('fartbtn'), total = document.getElementById('farttotal'), msg = document.getElementById('fartmsg');
+  var KEY = 'cape-fart-count';
+  var MSGS = [
+    'REPORT FILED. THANK YOU FOR YOUR SERVICE.',
+    'LOGGED. THE BUREAU SALUTES YOU.',
+    'CONFIRMED. WIND ADVISORY UPDATED.',
+    'NOTED. CRAP INDEX UNAFFECTED (FOR NOW).',
+    'RECEIVED. THE 2-YEAR-OLD HAS BEEN NOTIFIED.',
+    'FILED IN TRIPLICATE. AS IS TRADITION.',
+    'SEISMOGRAPH AT WOODS HOLE HAS BEEN ALERTED.',
+    'REPORT ACCEPTED. RULE 1 UPHELD.'
+  ];
+  function show(){ total.textContent = String(+(localStorage.getItem(KEY) || 0)).padStart(6,'0'); }
+  show();
+  btn.addEventListener('click', function(){
+    var n = +(localStorage.getItem(KEY) || 0) + 1;
+    localStorage.setItem(KEY, n);
+    show();
+    msg.textContent = MSGS[Math.floor(Math.random()*MSGS.length)] + (n % 10 === 0 ? ' 🏆 MILESTONE: ' + n + '!!' : '');
+    var r = btn.getBoundingClientRect();
+    var f = document.createElement('div');
+    f.className = 'fart-float'; f.textContent = '💨';
+    f.style.left = (r.left + r.width/2 - 15 + (Math.random()*60 - 30)) + 'px';
+    f.style.top = (r.top - 10) + 'px';
+    document.body.appendChild(f);
+    setTimeout(function(){ f.remove(); }, 1900);
+  });
+})();
 
 // Guestbook
 document.getElementById('gbform').addEventListener('submit', function(e){
@@ -721,21 +859,42 @@ document.querySelectorAll('.chk input').forEach(function(cb){
         stat('🌊 water', Math.round(t) + '°F'));
     }).catch(function(){});
 
-    // tides for today — NOAA station 8447435 Chatham Lydia Cove
-    var ymd = localDate(new Date()).replace(/-/g,'');
-    var TIDE_URL = 'https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=8447435&product=predictions&datum=MLLW&time_zone=lst_ldt&units=english&interval=hilo&format=json&begin_date=' + ymd + '&end_date=' + ymd;
-    fetch(TIDE_URL).then(function(r){ return r.json(); }).then(function(td){
-      if (!td.predictions || !td.predictions.length) throw 0;
-      var s = td.predictions.map(function(p){
-        return (p.type === 'H' ? '⬆️HI ' : '⬇️LO ') + clock(p.t);
-      }).join(' · ');
-      document.getElementById('wx-tides-lcd').textContent = 'TODAY: ' + s;
-      document.getElementById('wx-tides').hidden = false;
-    }).catch(function(){
-      var tp = document.getElementById('wx-tides');
-      tp.innerHTML = '<p class="tide-title">🦀 TIDE-O-METER 🦀</p><p class="wx-err" style="margin:0;font-size:12px">OFFLINE (NOAA buoy not answering)</p>';
-      tp.hidden = false;
-    });
+    // 🦀 TIDE-O-METER 2000 — real NOAA predictions, BOTH sides of town.
+    // 8447435 = Aunt Lydia's Cove (Fish Pier, harbor/east side)
+    // 8447505 = Stage Harbor (Nantucket Sound side = our beaches!)
+    (function(){
+      var ymd = localDate(new Date()).replace(/-/g,'');
+      function tideUrl(station){
+        return 'https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?station=' + station +
+          '&product=predictions&datum=MLLW&time_zone=lst_ldt&units=english&interval=hilo&format=json' +
+          '&begin_date=' + ymd + '&end_date=' + ymd;
+      }
+      function fmt(preds){
+        return preds.map(function(p){
+          return (p.type === 'H' ? '⬆️HI ' : '⬇️LO ') + clock(p.t);
+        }).join(' · ');
+      }
+      var lcd = document.getElementById('wx-tides-lcd');
+      var panel = document.getElementById('wx-tides');
+      Promise.all([
+        fetch(tideUrl('8447435')).then(function(r){ return r.json(); }).catch(function(){ return null; }),
+        fetch(tideUrl('8447505')).then(function(r){ return r.json(); }).catch(function(){ return null; })
+      ]).then(function(res){
+        var pier = res[0] && res[0].predictions && res[0].predictions.length ? res[0].predictions : null;
+        var sound = res[1] && res[1].predictions && res[1].predictions.length ? res[1].predictions : null;
+        if (!pier && !sound) throw 0;
+        var lines = [];
+        if (sound) lines.push('<b>🏖️ SOUND BEACHES:</b> ' + fmt(sound));
+        if (pier) lines.push('<b>🎣 FISH PIER:</b> ' + fmt(pier));
+        if (!sound) lines.push('<b>🏖️ SOUND BEACHES:</b> buoy not answering');
+        if (!pier) lines.push('<b>🎣 FISH PIER:</b> buoy not answering');
+        lcd.innerHTML = 'TODAY:<br>' + lines.join('<br>');
+        panel.hidden = false;
+      }).catch(function(){
+        panel.innerHTML = '<p class="tide-title">🦀 TIDE-O-METER 2000 🦀</p><p class="wx-err" style="margin:0;font-size:12px">OFFLINE (NOAA buoys not answering — no fake tides here)</p>';
+        panel.hidden = false;
+      });
+    })();
 
     // TRIP grid: Jul 25 – Aug 1, real data where the 16-day horizon reaches
     var cells = '', day = new Date(TRIP_START + 'T12:00:00'), end = new Date(TRIP_END + 'T12:00:00');

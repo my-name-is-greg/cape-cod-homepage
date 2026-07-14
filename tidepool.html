@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+<title>🦀 TIDE POOL ZEN — Cape Cod Homepage</title>
+<meta name="theme-color" content="#008080">
+<style>
+:root{--sand:#FFF8E1;--ink:#1A1A2E;--sea:#008080;--sun:#FFD700;--btnface:#C0C0C0;--deep:#0E5E63}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font:16px/1.6 Verdana,Geneva,Tahoma,sans-serif;background:linear-gradient(#CDEFEF,#B2E5E5 40%,#A5DCD2);min-height:100vh;touch-action:manipulation}
+.wrap{max-width:640px;margin:0 auto;padding:8px 12px 40px}
+h1{font-family:"Comic Sans MS","Comic Sans","Chalkboard SE",cursive;font-size:clamp(20px,6vw,30px);text-align:center;margin:8px 0 2px;color:var(--deep);text-shadow:1px 1px 0 #fff}
+.sub{text-align:center;font-size:13px;color:#33635F;margin:0 0 10px;font-style:italic}
+.card{background:var(--sand);border:3px ridge var(--sea);box-shadow:4px 4px 0 rgba(0,0,0,.25);padding:12px;margin:0 0 12px}
+.btn95{background:var(--btnface);border:3px outset #fff;color:#000;font:bold 15px Verdana,sans-serif;min-height:44px;min-width:44px;padding:8px 14px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.btn95:active{border-style:inset;transform:translate(1px,1px)}
+.lcd{font-family:"Courier New",monospace;background:#012A2E;color:#7FE6D8;letter-spacing:2px;padding:4px 8px;border:2px inset #808080;display:inline-block}
+.hud{display:flex;gap:8px;justify-content:center;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+
+#pool{position:relative;width:100%;height:min(58vh,440px);border:5px solid #C9B48A;border-radius:46% 54% 52% 48% / 42% 44% 56% 58%;overflow:hidden;box-shadow:inset 0 8px 30px rgba(1,42,46,.45), 4px 6px 0 rgba(0,0,0,.2);background:radial-gradient(ellipse at 35% 30%, #9FE6DD 0%, #4FB8AE 45%, #177E7C 80%, #0B5A5E 100%);cursor:pointer;user-select:none;-webkit-user-select:none}
+.ripple{position:absolute;border:2px solid rgba(255,255,255,.55);border-radius:50%;pointer-events:none;animation:rip 1.6s ease-out forwards}
+@keyframes rip{from{transform:scale(.1);opacity:.9}to{transform:scale(1);opacity:0}}
+.shimmer{position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 26px,rgba(255,255,255,.07) 26px 30px);animation:shim 9s linear infinite;pointer-events:none}
+@keyframes shim{to{transform:translateX(56px)}}
+.sprite{position:absolute;line-height:1;will-change:transform}
+.crab{font-size:26px;cursor:pointer;transition:opacity .5s;filter:drop-shadow(1px 2px 1px rgba(0,0,0,.3))}
+.crab.found{animation:lift 1s ease-out forwards;pointer-events:none}
+@keyframes lift{to{transform:translateY(-70px) scale(1.5);opacity:0}}
+.deco{pointer-events:none;opacity:.85}
+.kelp{animation:sway 5s ease-in-out infinite alternate;transform-origin:50% 100%}
+@keyframes sway{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+.plusone{position:absolute;font:bold 15px "Comic Sans MS","Comic Sans",cursive;color:#FFF8E1;text-shadow:1px 1px 0 #0B5A5E;pointer-events:none;animation:lift 1.1s ease-out forwards}
+
+/* quote + gull cards */
+.quotecard{position:absolute;left:8%;right:8%;top:18%;background:rgba(255,248,225,.96);border:3px double var(--sea);padding:14px;text-align:center;font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.6;color:#1E3B3A;box-shadow:3px 3px 0 rgba(0,0,0,.25);opacity:0;transition:opacity 1.2s;pointer-events:none;z-index:5}
+.quotecard.show{opacity:1}
+.quotecard .who{display:block;margin-top:6px;font-size:12px;font-style:italic;color:var(--deep);font-family:Verdana,sans-serif}
+#gull{position:absolute;font-size:36px;z-index:6;transition:transform 2.4s ease-in-out;pointer-events:none;filter:drop-shadow(1px 2px 2px rgba(0,0,0,.3))}
+#gullbubble{position:absolute;z-index:7;background:#fff;border:2px solid var(--deep);border-radius:12px;padding:10px 12px;max-width:70%;font-family:"Comic Sans MS","Comic Sans",cursive;font-size:14px;color:#1E3B3A;box-shadow:2px 2px 0 rgba(0,0,0,.2);opacity:0;transition:opacity .8s;pointer-events:none}
+#gullbubble.show{opacity:1}
+#gullbubble::after{content:"";position:absolute;bottom:-10px;left:24px;border:10px solid transparent;border-top-color:var(--deep);border-bottom:0}
+.jar{text-align:center;font-size:13px;color:#33635F;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🌊 tide pool zen 🦀</h1>
+<p class="sub">no timer · no score to lose · just you, the pool, and whoever wanders in</p>
+
+<div class="hud">
+  <span class="lcd">🫙 CRABS BEFRIENDED: <span id="count">0</span></span>
+  <button class="btn95" id="sound" type="button">🔈 sound: off</button>
+  <a class="btn95" href="index.html">🏠 home</a>
+</div>
+
+<div id="pool" aria-label="tide pool">
+  <div class="shimmer" aria-hidden="true"></div>
+  <div class="quotecard" id="quote" aria-live="polite"></div>
+  <div id="gull" style="transform:translate(-80px,-80px)">🕊️</div>
+  <div id="gullbubble"></div>
+</div>
+
+<p class="jar">tap a hermit crab to say hello. it counts as befriending. they go back in the pool later, this is a catch-and-release operation. total saved on this phone.</p>
+
+<div class="card">
+  <p style="margin:0;font-size:13px;color:#33635F">🐚 Real tide pool hours: check the TIDE-O-METER on the homepage — low tide at Monomoy or the Ridgevale creek is the good stuff. This page is for the car ride there.</p>
+</div>
+
+<div class="card" style="text-align:center">
+  <p style="margin:0 0 8px;font-weight:bold;color:var(--deep)">🕹️ MORE FROM THE ARCADE 🕹️</p>
+  <div class="hud" style="margin:0">
+    <a class="btn95" href="game.html">🦈 SHARK DODGE</a>
+    <a class="btn95" href="gulls.html">💩 GULL PATROL</a>
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+  var pool = document.getElementById('pool');
+  var countEl = document.getElementById('count');
+  var KEY = 'cape-crab-count';
+  var count = +(localStorage.getItem(KEY) || 0);
+  countEl.textContent = count;
+
+  var CRABS = ['🦀','🐚','🦐','⭐','🐌'];
+  var DECO = ['🪨','🌿','🐚','🪸'];
+
+  // short real quotes, all attributed
+  var QUOTES = [
+    ['The sea is everything.', 'Jules Verne'],
+    ['Live in the sunshine, swim the sea, drink the wild air.', 'Ralph Waldo Emerson'],
+    ['The voice of the sea speaks to the soul.', 'Kate Chopin'],
+    ['We are tied to the ocean.', 'John F. Kennedy'],
+    ['The sea lies all about us.', 'Rachel Carson'],
+    ['The cure for anything is salt water: sweat, tears or the sea.', 'Isak Dinesen'],
+    ['There is, one knows not what sweet mystery about this sea.', 'Herman Melville'],
+    ['To me the sea is a continual miracle.', 'Walt Whitman']
+  ];
+  var GULL_WISDOM = [
+    'the tide takes nothing it does not return, kid. except sandwiches.',
+    'i have seen ten thousand sunsets over this sound. every one was free.',
+    'the hermit crab does not envy the lobster its house. mostly.',
+    'be like the tide pool: small, calm, and full of interesting friends.',
+    'a wave is only water in a hurry. you do not have to be a wave today.',
+    'the ocean has been practicing patience for four billion years. you can take a week.',
+    'even the smallest shell holds the sound of the whole sea. probably. i cannot hear that well.',
+    'rest, little beachgoer. the sand will still be in the car tomorrow.'
+  ];
+
+  // sound (opt-in only)
+  var soundOn = false, actx = null;
+  var soundBtn = document.getElementById('sound');
+  soundBtn.addEventListener('click', function(){
+    soundOn = !soundOn;
+    soundBtn.textContent = soundOn ? '🔊 sound: on' : '🔈 sound: off';
+    if (soundOn && !actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (soundOn) actx.resume();
+  });
+  function chime(freq){
+    if (!soundOn || !actx) return;
+    try{
+      var o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o.frequency.value = freq;
+      g.gain.setValueAtTime(.0001, actx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.09, actx.currentTime + .03);
+      g.gain.exponentialRampToValueAtTime(.0001, actx.currentTime + 1.4);
+      o.connect(g); g.connect(actx.destination);
+      o.start(); o.stop(actx.currentTime + 1.5);
+    }catch(e){}
+  }
+
+  function poolRect(){ return { w: pool.clientWidth, h: pool.clientHeight }; }
+  function spot(pad){
+    var r = poolRect();
+    // keep inside the blobby border: use an inner ellipse
+    var a = Math.random() * Math.PI * 2, rad = Math.sqrt(Math.random());
+    return {
+      x: r.w/2 + Math.cos(a) * rad * (r.w/2 - pad) ,
+      y: r.h/2 + Math.sin(a) * rad * (r.h/2 - pad)
+    };
+  }
+
+  // decorations
+  for (var i = 0; i < 7; i++){
+    var d = document.createElement('div');
+    d.className = 'sprite deco' + (Math.random() < .5 ? ' kelp' : '');
+    d.textContent = DECO[Math.floor(Math.random()*DECO.length)];
+    d.style.fontSize = (16 + Math.random()*16) + 'px';
+    var s = spot(40);
+    d.style.transform = 'translate(' + s.x + 'px,' + s.y + 'px)';
+    d.style.animationDelay = (Math.random()*4) + 's';
+    pool.appendChild(d);
+  }
+
+  // ambient ripples
+  setInterval(function(){
+    if (document.hidden) return;
+    var s = spot(30), r = document.createElement('div');
+    r.className = 'ripple';
+    var sz = 30 + Math.random()*70;
+    r.style.width = r.style.height = sz + 'px';
+    r.style.left = (s.x - sz/2) + 'px'; r.style.top = (s.y - sz/2) + 'px';
+    pool.appendChild(r);
+    setTimeout(function(){ r.remove(); }, 1700);
+  }, 2200);
+
+  // crabs wander in
+  var crabs = [];
+  function addCrab(){
+    if (crabs.length >= 5) return;
+    var c = document.createElement('div');
+    c.className = 'sprite crab';
+    c.textContent = CRABS[Math.floor(Math.random()*CRABS.length)];
+    var s = spot(36);
+    c._x = s.x; c._y = s.y; c._a = Math.random()*Math.PI*2;
+    c.style.transform = 'translate(' + c._x + 'px,' + c._y + 'px)';
+    c.style.opacity = 0;
+    pool.appendChild(c);
+    requestAnimationFrame(function(){ c.style.opacity = 1; });
+    c.addEventListener('pointerdown', function(e){
+      e.stopPropagation();
+      befriend(c);
+    });
+    crabs.push(c);
+  }
+  function befriend(c){
+    if (c._found) return;
+    c._found = true;
+    c.classList.add('found');
+    count++; localStorage.setItem(KEY, count);
+    countEl.textContent = count;
+    chime(523.25 + Math.random()*220);
+    var p = document.createElement('div');
+    p.className = 'plusone'; p.textContent = '+1 friend';
+    p.style.left = c._x + 'px'; p.style.top = (c._y - 10) + 'px';
+    pool.appendChild(p);
+    setTimeout(function(){ p.remove(); c.remove(); crabs = crabs.filter(function(x){return x!==c;}); }, 1100);
+    sinceQuote++;
+    maybeMoment();
+  }
+  // gentle wandering
+  setInterval(function(){
+    if (document.hidden) return;
+    var r = poolRect();
+    crabs.forEach(function(c){
+      if (c._found) return;
+      c._a += (Math.random()-.5) * 1.2;
+      c._x += Math.cos(c._a) * 8; c._y += Math.sin(c._a) * 8;
+      c._x = Math.max(24, Math.min(r.w-40, c._x));
+      c._y = Math.max(24, Math.min(r.h-40, c._y));
+      c.style.transform = 'translate(' + c._x + 'px,' + c._y + 'px)';
+    });
+  }, 900);
+  setInterval(function(){ if (!document.hidden) addCrab(); }, 3000);
+  addCrab(); setTimeout(addCrab, 800);
+
+  // tap water = ripple only (that's allowed, it's soothing)
+  pool.addEventListener('pointerdown', function(e){
+    var rect = pool.getBoundingClientRect();
+    var r = document.createElement('div');
+    r.className = 'ripple';
+    var sz = 46;
+    r.style.width = r.style.height = sz + 'px';
+    r.style.left = (e.clientX - rect.left - sz/2) + 'px';
+    r.style.top = (e.clientY - rect.top - sz/2) + 'px';
+    pool.appendChild(r);
+    setTimeout(function(){ r.remove(); }, 1700);
+    chime(261.63);
+  });
+
+  // ═══ moments: ocean quotes + the wise seagull ═══
+  var quoteEl = document.getElementById('quote');
+  var gullEl = document.getElementById('gull');
+  var bubbleEl = document.getElementById('gullbubble');
+  var sinceQuote = 0, qi = Math.floor(Math.random()*QUOTES.length), wi = Math.floor(Math.random()*GULL_WISDOM.length);
+  var momentBusy = false, momentsShown = 0;
+
+  function maybeMoment(){
+    if (momentBusy) return;
+    if (sinceQuote >= 6 + Math.floor(Math.random()*3)){
+      sinceQuote = 0; momentsShown++;
+      // every 3rd moment the seagull himself descends
+      (momentsShown % 3 === 0) ? gullMoment() : quoteMoment();
+    }
+  }
+  // also a slow ambient timer so idle watchers get moments too
+  setInterval(function(){ if (!document.hidden){ sinceQuote++; maybeMoment(); } }, 25000);
+
+  function quoteMoment(){
+    momentBusy = true;
+    var q = QUOTES[qi % QUOTES.length]; qi++;
+    quoteEl.innerHTML = '“' + q[0] + '”<span class="who">— ' + q[1] + '</span>';
+    quoteEl.classList.add('show');
+    chime(392); setTimeout(function(){ chime(523.25); }, 500);
+    setTimeout(function(){
+      quoteEl.classList.remove('show');
+      setTimeout(function(){ momentBusy = false; }, 1300);
+    }, 7000);
+  }
+
+  function gullMoment(){
+    momentBusy = true;
+    var r = poolRect();
+    var landX = r.w * (0.18 + Math.random() * 0.5), landY = r.h * 0.22;
+    gullEl.textContent = '🕊️';
+    gullEl.style.transition = 'none';
+    gullEl.style.transform = 'translate(' + (r.w + 60) + 'px,-60px)';
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      gullEl.style.transition = 'transform 2.4s ease-in-out';
+      gullEl.style.transform = 'translate(' + landX + 'px,' + landY + 'px)';
+    });});
+    setTimeout(function(){
+      gullEl.textContent = '🐦';
+      bubbleEl.textContent = GULL_WISDOM[wi % GULL_WISDOM.length]; wi++;
+      bubbleEl.style.left = Math.max(8, Math.min(r.w * .5, landX - 30)) + 'px';
+      bubbleEl.style.top = Math.max(8, landY - 86) + 'px';
+      bubbleEl.classList.add('show');
+      chime(659.25);
+    }, 2600);
+    setTimeout(function(){
+      bubbleEl.classList.remove('show');
+      gullEl.textContent = '🕊️';
+      gullEl.style.transform = 'translate(-80px,-80px)';
+    }, 9600);
+    setTimeout(function(){ momentBusy = false; }, 12200);
+  }
+})();
+</script>
+</body>
+</html>
