@@ -174,25 +174,6 @@ body.paused *{animation-play-state:paused!important}
       </div>
     </div>
 
-    <div class="wx-indices" aria-hidden="true">
-      <span class="wx-stat">💨 <b>FART INDEX:</b> <span class="wx-idx" id="wx-fart"></span></span>
-      <span class="wx-stat">💩 <b>CRAP INDEX:</b> <span class="wx-idx" id="wx-crap"></span></span>
-    </div>
-    <script>
-    (function(){
-      function pick(a){return a[Math.floor(Math.random()*a.length)]}
-      var LVL={High:'#FF8C00',Critical:'#FF0000',Medium:'#008000'};
-      function setIdx(id,levels){
-        var v=pick(levels),el=document.getElementById(id);
-        el.textContent=v.toUpperCase();
-        el.style.color=LVL[v];
-        if(v==='Critical')el.className+=' blink';
-      }
-      setIdx('wx-fart',['High','Critical']);
-      setIdx('wx-crap',['Medium','High','Critical']);
-    })();
-    </script>
-
     <!-- ═══════════ WEATHER BULLETIN TICKER ═══════════
          Dad: paste your official joke weather bulletins below, one per <span>.
          They'll scroll in the marquee. Example:
@@ -689,6 +670,21 @@ document.querySelectorAll('.chk input').forEach(function(cb){
   }
   function err(el, what){
     el.innerHTML = '<div class="wx-err">📡 <span class="blink">SATELLITE LINK LOST</span> 📡<br><span style="color:#32CD32;font-size:12px">' + what + ' unavailable — refusing to make up numbers. try reloading!</span></div>';
+    if (el.id === 'wx-today') el.insertAdjacentHTML('beforeend', indices());
+  }
+  // fart + crap indices: the only readings the satellite never loses
+  function indices(){
+    function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+    var LVL = {High:'#FF8C00', Critical:'#FF0000', Medium:'#008000'};
+    function idx(label, emoji, levels){
+      var v = pick(levels);
+      return '<span class="wx-stat">' + emoji + ' <b>' + label + ':</b> <span class="wx-idx' +
+        (v === 'Critical' ? ' blink' : '') + '" style="color:' + LVL[v] + '">' + v.toUpperCase() + '</span></span>';
+    }
+    return '<div class="wx-indices" aria-hidden="true" style="margin:6px 0 0">' +
+      idx('FART INDEX','💨',['High','Critical']) +
+      idx('CRAP INDEX','💩',['Medium','High','Critical']) +
+      '</div>';
   }
   function localDate(d){ // YYYY-MM-DD in browser-local time
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
@@ -714,7 +710,8 @@ document.querySelectorAll('.chk input').forEach(function(cb){
         stat('🧊 lo', Math.round(d.temperature_2m_min[ti]) + '°') +
         stat('🧴 UV', d.uv_index_max[ti] == null ? '?' : Math.round(d.uv_index_max[ti])) +
         stat('🌅 sun', clock(d.sunrise[ti]) + '–' + clock(d.sunset[ti])) +
-      '</div>';
+      '</div>' +
+      indices();
     todayEl.innerHTML = html;
 
     // water temp (nice-to-have; silently skipped if the buoy is sulking)
